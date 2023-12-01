@@ -26,7 +26,7 @@ public class TanksGame extends JFrame {
         animator.add(glcanvas);
         animator.start();
 
-        setTitle("Anim Test");
+        setTitle("TanksGame");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 700);
         setLocationRelativeTo(null);

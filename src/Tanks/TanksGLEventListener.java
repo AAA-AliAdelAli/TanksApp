@@ -19,18 +19,22 @@ public class TanksGLEventListener extends TanksListener {
         down,
         left,
         right,
+        w,
+        a,
+        s,
+        d,
+        q,
 
-        up_left,
-        up_right,
-        down_left,
-        down_right
     }
 
     Directions direction = Directions.up;
+    Directions direction2 = Directions.s;
 
     int maxWidth = 60;
     int maxHeight = 60;
+
     int x = 0, y = 0;
+    int x2 = 0, y2 = 0;
 
     String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
@@ -78,7 +82,9 @@ public class TanksGLEventListener extends TanksListener {
         DrawBackground(gl);
         handleKeyPress();
         animationIndex = animationIndex % 4;
+        DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
         DrawTank(gl, x, y, animationIndex, 1, direction);
+
 
 
 
@@ -125,7 +131,41 @@ public class TanksGLEventListener extends TanksListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
+    public void DrawTank2(GL gl, int x, int y, int index, float scale, Directions dir){
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+        int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
+        if (dir == Directions.w){
+            angle = 0;
+        } else if (dir == Directions.s) {
+            angle = 180;
+        } else if (dir == Directions.a) {
+            angle = 90;
 
+        } else if (dir == Directions.d) {
+            angle = -90;
+        }
+
+        gl.glPushMatrix();
+        gl.glTranslated(x / (maxWidth / 2.0) + 0.9, y / (maxHeight / 2.0) + 0.9, 0);
+        gl.glScaled(0.1*scale, 0.1*scale, 1);
+        gl.glRotated(angle,0,0,1);
+        //System.out.println(x +" " + y);
+        gl.glBegin(GL.GL_QUADS);
+        // Front Face
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+
+        gl.glDisable(GL.GL_BLEND);
+    }
     public void DrawBackground(GL gl){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);	// Turn Blending On
@@ -152,7 +192,7 @@ public class TanksGLEventListener extends TanksListener {
     public void handleKeyPress () {
 
         if (isKeyPressed(KeyEvent.VK_SPACE)) {
-
+            //fire
         }
         else if (isKeyPressed(KeyEvent.VK_LEFT)) {
             if (x > 0) {
@@ -179,6 +219,35 @@ public class TanksGLEventListener extends TanksListener {
             direction = Directions.down;
 
         }
+        //  player2
+        if (isKeyPressed(KeyEvent.VK_Q)) {
+            // fire
+        } else if (isKeyPressed(KeyEvent.VK_A)) {
+
+            if (x2 > -maxWidth) {
+                x2--;
+            }
+            direction2 = Directions.a;
+        } else if (isKeyPressed(KeyEvent.VK_D)) {
+
+            if (x2 < 0) {
+                x2++;
+            }
+            direction2 = Directions.d;
+        } else if (isKeyPressed(KeyEvent.VK_W)) {
+
+            if (y2 < 0) {
+                y2++;
+            }
+            direction2 = Directions.w;
+        } else if (isKeyPressed(KeyEvent.VK_S)) {
+
+            if (y2 > -maxHeight) {
+                y2--;
+            }
+            direction2 = Directions.s;
+        }
+
     }
 
     public BitSet keyBits = new BitSet(256);
