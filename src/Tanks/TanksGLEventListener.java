@@ -19,11 +19,11 @@ public class TanksGLEventListener extends TanksListener {
         down,
         left,
         right,
-        w,
-        a,
-        s,
-        d,
-        q,
+        W,
+        A,
+        S,
+        D,
+        Q,
 
     }
 
@@ -135,14 +135,14 @@ public class TanksGLEventListener extends TanksListener {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
         int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
-        if (dir == Directions.w){
+        if (dir == Directions.W){
             angle = 0;
-        } else if (dir == Directions.s) {
+        } else if (dir == Directions.S) {
             angle = 180;
-        } else if (dir == Directions.a) {
+        } else if (dir == Directions.A) {
             angle = 90;
 
-        } else if (dir == Directions.d) {
+        } else if (dir == Directions.D) {
             angle = -90;
         }
 
@@ -227,25 +227,25 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 > -maxWidth) {
                 x2--;
             }
-            direction2 = Directions.a;
+            direction2 = Directions.A;
         } else if (isKeyPressed(KeyEvent.VK_D)) {
 
             if (x2 < 0) {
                 x2++;
             }
-            direction2 = Directions.d;
+            direction2 = Directions.D;
         } else if (isKeyPressed(KeyEvent.VK_W)) {
 
             if (y2 < 0) {
                 y2++;
             }
-            direction2 = Directions.w;
+            direction2 = Directions.W;
         } else if (isKeyPressed(KeyEvent.VK_S)) {
 
             if (y2 > -maxHeight) {
                 y2--;
             }
-            direction2 = Directions.s;
+            direction2 = Directions.S;
         }
 
     }
