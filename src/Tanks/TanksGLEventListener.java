@@ -28,7 +28,7 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     Directions direction = Directions.up;
-    Directions direction2 = Directions.s;
+    Directions direction2 = Directions.S;
 
     int maxWidth = 60;
     int maxHeight = 60;
@@ -224,7 +224,7 @@ public class TanksGLEventListener extends TanksListener {
             // fire
         } else if (isKeyPressed(KeyEvent.VK_A)) {
 
-            if (x2 > -maxWidth) {
+            if (x2 > -maxWidth+6) {
                 x2--;
             }
             direction2 = Directions.A;
@@ -242,7 +242,7 @@ public class TanksGLEventListener extends TanksListener {
             direction2 = Directions.W;
         } else if (isKeyPressed(KeyEvent.VK_S)) {
 
-            if (y2 > -maxHeight) {
+            if (y2 > -maxHeight+6) {
                 y2--;
             }
             direction2 = Directions.S;
