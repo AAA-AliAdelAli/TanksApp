@@ -11,11 +11,12 @@ public class TanksGame extends JFrame {
 
         new TanksGame();
     }
+    static Animator animator;
 
 
     public TanksGame() {
         GLCanvas glcanvas;
-        Animator animator;
+
 
         TanksGLEventListener listener = new TanksGLEventListener();
         glcanvas = new GLCanvas();

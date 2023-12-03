@@ -3,6 +3,9 @@ package Tanks;
 
 
 import Texture.TextureReader;
+import com.sun.opengl.util.Animator;
+
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import javax.media.opengl.*;
@@ -35,6 +38,7 @@ public class TanksGLEventListener extends TanksListener {
 
     int x = 0, y = 0;
     int x2 = 0, y2 = 0;
+
 
     String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
@@ -82,11 +86,8 @@ public class TanksGLEventListener extends TanksListener {
         DrawBackground(gl);
         handleKeyPress();
         animationIndex = animationIndex % 4;
-        DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
-        DrawTank(gl, x, y, animationIndex, 1, direction);
-
-
-
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
 
     }
 
@@ -98,7 +99,7 @@ public class TanksGLEventListener extends TanksListener {
 
     public void DrawTank(GL gl, int x, int y, int index, float scale, Directions dir){
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
         int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
         if (dir == Directions.up){
             angle = 0;
@@ -133,7 +134,7 @@ public class TanksGLEventListener extends TanksListener {
     }
     public void DrawTank2(GL gl, int x, int y, int index, float scale, Directions dir){
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
         int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
         if (dir == Directions.W){
             angle = 0;
@@ -145,6 +146,7 @@ public class TanksGLEventListener extends TanksListener {
         } else if (dir == Directions.D) {
             angle = -90;
         }
+
 
         gl.glPushMatrix();
         gl.glTranslated(x / (maxWidth / 2.0) + 0.9, y / (maxHeight / 2.0) + 0.9, 0);
@@ -168,7 +170,7 @@ public class TanksGLEventListener extends TanksListener {
     }
     public void DrawBackground(GL gl){
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);	// Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);    // Turn Blending On
 
         gl.glPushMatrix();
         gl.glBegin(GL.GL_QUADS);
@@ -186,69 +188,92 @@ public class TanksGLEventListener extends TanksListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
-
-
-
-    public void handleKeyPress () {
-
-        if (isKeyPressed(KeyEvent.VK_SPACE)) {
-            //fire
-        }
-        else if (isKeyPressed(KeyEvent.VK_LEFT)) {
-            if (x > 0) {
-                x--;
-            }
-            direction = Directions.left;
-
-        } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            if (x < maxWidth - 6) {
-                x++;
-            }
-            direction = Directions.right;
-
-        } else if (isKeyPressed(KeyEvent.VK_UP)) {
-            if (y < maxHeight - 6) {
-                y++;
-            }
-            direction = Directions.up;
-
-        } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
-            if (y > 0) {
-                y--;
-            }
-            direction = Directions.down;
-
-        }
-        //  player2
-        if (isKeyPressed(KeyEvent.VK_Q)) {
-            // fire
-        } else if (isKeyPressed(KeyEvent.VK_A)) {
-
-            if (x2 > -maxWidth+6) {
-                x2--;
-            }
-            direction2 = Directions.A;
-        } else if (isKeyPressed(KeyEvent.VK_D)) {
-
-            if (x2 < 0) {
-                x2++;
-            }
-            direction2 = Directions.D;
-        } else if (isKeyPressed(KeyEvent.VK_W)) {
-
-            if (y2 < 0) {
-                y2++;
-            }
-            direction2 = Directions.W;
-        } else if (isKeyPressed(KeyEvent.VK_S)) {
-
-            if (y2 > -maxHeight+6) {
-                y2--;
-            }
-            direction2 = Directions.S;
-        }
-
+    public double getDistance(){
+        return  Math.sqrt((x - (x2+54))*(x - (x2+54))+(y - (y2+54))*(y - (y2+54)));
     }
+    public void handleKeyPress () {
+            if (isKeyPressed(KeyEvent.VK_SPACE)) {
+                //fire
+            } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+                if (x > 0) {
+                    x--;
+                    if (getDistance()<6) {
+                        x++;
+                    }
+                }
+                direction = Directions.left;
+
+            } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
+                if (x < maxWidth - 6) {
+                    x++;
+                    if (getDistance()<6) {
+                        x--;
+                    }
+                }
+                direction = Directions.right;
+
+            } else if (isKeyPressed(KeyEvent.VK_UP)) {
+                if (y < maxHeight - 6) {
+                    y++;
+                    if (getDistance()<6) {
+                        y--;
+                    }
+                }
+                direction = Directions.up;
+
+            } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
+                if (y > 0) {
+                    y--;
+                    if (getDistance()<6) {
+                        y++;
+                    }
+                }
+                direction = Directions.down;
+
+            }
+            //  player2
+            if (isKeyPressed(KeyEvent.VK_Q)) {
+                // fire
+            } else if (isKeyPressed(KeyEvent.VK_A)) {
+
+                if (x2 > -maxWidth + 6) {
+                    x2--;
+                    if (getDistance()<6) {
+                        x2++;
+                    }
+                }
+                direction2 = Directions.A;
+            } else if (isKeyPressed(KeyEvent.VK_D)) {
+
+                if (x2 < 0) {
+                    x2++;
+                    if (getDistance()<6) {
+                        x2--;
+                    }
+                }
+                direction2 = Directions.D;
+            } else if (isKeyPressed(KeyEvent.VK_W)) {
+
+                if (y2 < 0) {
+                    y2++;
+                    if (getDistance()<6) {
+                        y2--;
+                    }
+                }
+                direction2 = Directions.W;
+            } else if (isKeyPressed(KeyEvent.VK_S)) {
+
+                if (y2 > -maxHeight + 6) {
+                    y2--;
+                    if (getDistance()<6) {
+                        y2++;
+                    }
+                }
+                direction2 = Directions.S;
+            }
+        }
+
+
 
     public BitSet keyBits = new BitSet(256);
 
