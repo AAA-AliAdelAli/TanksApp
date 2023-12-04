@@ -22,16 +22,25 @@ public class TanksGLEventListener extends TanksListener {
         down,
         left,
         right,
+        down_right,
+        up_left,
+        up_right,
+        down_left,
         W,
         A,
         S,
         D,
         Q,
 
+        W_A,
+        W_D,
+        S_A,
+        S_D
+
     }
 
-    Directions direction = Directions.up;
     Directions direction2 = Directions.S;
+    Directions direction = Directions.up;
 
     int maxWidth = 60;
     int maxHeight = 60;
@@ -110,6 +119,14 @@ public class TanksGLEventListener extends TanksListener {
 
         } else if (dir == Directions.right) {
             angle = -90;
+        } else if (dir == Directions.down_right) {
+            angle =-135;
+        }else if (dir == Directions.down_left){
+            angle =135;
+        } else if (dir == Directions.up_left) {
+            angle = 45;
+        }else if (dir == Directions.up_right) {
+            angle = -45;
         }
 
         gl.glPushMatrix();
@@ -136,15 +153,22 @@ public class TanksGLEventListener extends TanksListener {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
         int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
-        if (dir == Directions.W){
+        if (dir == Directions.W) {
             angle = 0;
         } else if (dir == Directions.S) {
             angle = 180;
         } else if (dir == Directions.A) {
             angle = 90;
-
         } else if (dir == Directions.D) {
             angle = -90;
+        } else if (dir == Directions.S_D) {
+            angle = 135;
+        } else if (dir == Directions.S_A) {
+            angle = -135;
+        } else if (dir == Directions.W_A) {
+            angle = -45;
+        } else if (dir == Directions.W_D) {
+            angle = 45;
         }
 
 
@@ -192,86 +216,167 @@ public class TanksGLEventListener extends TanksListener {
         return  Math.sqrt((x - (x2+54))*(x - (x2+54))+(y - (y2+54))*(y - (y2+54)));
     }
     public void handleKeyPress () {
-            if (isKeyPressed(KeyEvent.VK_SPACE)) {
-                //fire
-            } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
-                if (x > 0) {
-                    x--;
-                    if (getDistance()<6) {
-                        x++;
-                    }
-                }
-                direction = Directions.left;
-
-            } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-                if (x < maxWidth - 6) {
+        if (isKeyPressed(KeyEvent.VK_SPACE)) {
+            // fire
+        } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+            if (x > 0 && y > 0) {
+                x--;
+                y--;
+                if (getDistance() < 6) {
                     x++;
-                    if (getDistance()<6) {
-                        x--;
-                    }
-                }
-                direction = Directions.right;
-
-            } else if (isKeyPressed(KeyEvent.VK_UP)) {
-                if (y < maxHeight - 6) {
                     y++;
-                    if (getDistance()<6) {
-                        y--;
-                    }
                 }
-                direction = Directions.up;
-
-            } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
-                if (y > 0) {
+            }
+            direction = Directions.down_left;
+        } else if (isKeyPressed(KeyEvent.VK_RIGHT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+            // Handle down_right
+            if (x < maxWidth - 6 && y > 0) {
+                x++;
+                y--;
+                if (getDistance() < 6) {
+                    x--;
+                    y++;
+                }
+            }
+            direction = Directions.down_right;
+        } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_LEFT)) {
+            // Handle up_left
+            if (y < maxHeight - 6 && x > 0) {
+                y++;
+                x--;
+                if (getDistance() < 6) {
                     y--;
-                    if (getDistance()<6) {
-                        y++;
-                    }
+                    x++;
                 }
-                direction = Directions.down;
-
             }
-            //  player2
-            if (isKeyPressed(KeyEvent.VK_Q)) {
-                // fire
-            } else if (isKeyPressed(KeyEvent.VK_A)) {
-
-                if (x2 > -maxWidth + 6) {
-                    x2--;
-                    if (getDistance()<6) {
-                        x2++;
-                    }
+            direction = Directions.up_left;
+        } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_RIGHT)) {
+            // Handle up_right
+            if (y < maxHeight - 6 && x < maxWidth - 6) {
+                y++;
+                x++;
+                if (getDistance() < 6) {
+                    y--;
+                    x--;
                 }
-                direction2 = Directions.A;
-            } else if (isKeyPressed(KeyEvent.VK_D)) {
-
-                if (x2 < 0) {
-                    x2++;
-                    if (getDistance()<6) {
-                        x2--;
-                    }
-                }
-                direction2 = Directions.D;
-            } else if (isKeyPressed(KeyEvent.VK_W)) {
-
-                if (y2 < 0) {
-                    y2++;
-                    if (getDistance()<6) {
-                        y2--;
-                    }
-                }
-                direction2 = Directions.W;
-            } else if (isKeyPressed(KeyEvent.VK_S)) {
-
-                if (y2 > -maxHeight + 6) {
-                    y2--;
-                    if (getDistance()<6) {
-                        y2++;
-                    }
-                }
-                direction2 = Directions.S;
             }
+            direction = Directions.up_right;
+        } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+            // Handle left
+            if (x > 0) {
+                x--;
+                if (getDistance() < 6) {
+                    x++;
+                }
+            }
+            direction = Directions.left;
+        } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
+            // Handle right
+            if (x < maxWidth - 6) {
+                x++;
+                if (getDistance() < 6) {
+                    x--;
+                }
+            }
+            direction = Directions.right;
+        } else if (isKeyPressed(KeyEvent.VK_UP)) {
+            // Handle up
+            if (y < maxHeight - 6) {
+                y++;
+                if (getDistance() < 6) {
+                    y--;
+                }
+            }
+            direction = Directions.up;
+        } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
+            // Handle down
+            if (y > 0) {
+                y--;
+                if (getDistance() < 6) {
+                    y++;
+                }
+            }
+            direction = Directions.down;
         }
+
+        //  player2
+        if (isKeyPressed(KeyEvent.VK_Q)) {
+            // fire
+        }else if (isKeyPressed(KeyEvent.VK_A)) {
+            if (x2 > -maxWidth + 6) {
+                x2--;
+                if (getDistance() < 6) {
+                    x2++;
+                }
+            }
+            direction2 = Directions.A;
+        } else if (isKeyPressed(KeyEvent.VK_D)) {
+            if (x2 < 0) {
+                x2++;
+                if (getDistance() < 6) {
+                    x2--;
+                }
+            }
+            direction2 = Directions.D;
+        } else if (isKeyPressed(KeyEvent.VK_W)) {
+            if (y2 < 0) {
+                y2++;
+                if (getDistance() < 6) {
+                    y2--;
+                }
+            }
+            direction2 = Directions.W;
+        } else if (isKeyPressed(KeyEvent.VK_S)) {
+            if (y2 > -maxHeight + 6) {
+                y2--;
+                if (getDistance() < 6) {
+                    y2++;
+                }
+            }
+            direction2 = Directions.S;
+        } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
+            if (x2 > -maxWidth + 6 && y2 < 0) {
+                x2--;
+                y2++;
+                if (getDistance() < 6) {
+                    x2++;
+                    y2--;
+                }
+            }
+            direction2 = Directions.W_A;
+        } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_W)) {
+            if (x2 < 0 && y2 < 0) {
+                x2++;
+                y2++;
+                if (getDistance() < 6) {
+                    x2--;
+                    y2--;
+                }
+            }
+            direction2 = Directions.W_D;
+        } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_S)) {
+            if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
+                x2--;
+                y2--;
+                if (getDistance() < 6) {
+                    x2++;
+                    y2++;
+                }
+            }
+            direction2 = Directions.S_A;
+        } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_S)) {
+            if (x2 < 0 && y2 > -maxHeight + 6) {
+                x2++;
+                y2--;
+                if (getDistance() < 6) {
+                    x2--;
+                    y2++;
+                }
+            }
+            direction2 = Directions.S_D;
+        }
+
+    }
 
 
 
