@@ -48,8 +48,24 @@ public class TanksGLEventListener extends TanksListener {
     int x = 0, y = 0;
     int x2 = 0, y2 = 0;
 
+    Point2D bullsPositions[] = {
+        new Point2D(55, 30),
+        new Point2D(50, 30),
+        new Point2D(45, 30),
+        new Point2D(40, 30),
+        new Point2D(35, 30),
+        new Point2D(30, 30),
+        new Point2D(25, 30),
+        new Point2D(20, 30),
+        new Point2D(15, 30),
+        
+        new Point2D(25, 25),
+        new Point2D(25, 20),
+        new Point2D(25, 15),
+    };
+    
 
-    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "Back.jpg"};
+    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -97,6 +113,9 @@ public class TanksGLEventListener extends TanksListener {
         animationIndex = animationIndex % 4;
             DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             DrawTank(gl, x, y, animationIndex, 1, direction);
+        
+        for (Point2D p: bullsPositions)
+            drawBull(gl, p);
 
     }
 
@@ -212,9 +231,78 @@ public class TanksGLEventListener extends TanksListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
+    
+    public void drawBull(GL gl, Point2D p) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[5]);
+        
+        gl.glPushMatrix();
+            gl.glTranslated(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9, 0);
+            gl.glScaled(.1, .1, 1);
+            
+            frontFace(gl);
+        gl.glPopMatrix();
+        
+        gl.glDisable(GL.GL_BLEND);
+    }
+    
+    private void frontFace(GL gl) {
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_QUADS);
+        // Front Face
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+    }
+    
     public double getDistance(){
         return  Math.sqrt((x - (x2+54))*(x - (x2+54))+(y - (y2+54))*(y - (y2+54)));
     }
+    
+    private Point2D getPosition(Point2D p, boolean fromUp) {
+        if (fromUp)
+            return new Point2D(p.x / (maxWidth / 2.0) + 0.9, p.y / (maxHeight / 2.0) + 0.9);
+        
+        return new Point2D(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9);
+    }
+    
+    private boolean isBullForTank1() {
+        Point2D tank1Position = getPosition(new Point2D(x, y), false),
+                bullPosition = new Point2D();
+        
+        for (int i = 0; i < bullsPositions.length; i++) {
+            bullPosition = getPosition(bullsPositions[i], false);
+            double distance = tank1Position.getDistanceFrom(bullPosition);
+            
+            if (distance < .2)
+                return true;
+        }
+        
+        return false;
+    }
+    
+    private boolean isBullForTank2() {
+        Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
+                bullPosition = new Point2D();
+        
+        for (int i = 0; i < bullsPositions.length; i++) {
+            bullPosition = getPosition(bullsPositions[i], false);
+            double distance = tank2Position.getDistanceFrom(bullPosition);
+            
+            if (distance < .2)
+                return true;
+        }
+        
+        return false;
+    }
+    
     public void handleKeyPress () {
         if (isKeyPressed(KeyEvent.VK_SPACE)) {
             // fire
@@ -222,7 +310,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x > 0 && y > 0) {
                 x--;
                 y--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     x++;
                     y++;
                 }
@@ -233,7 +321,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x < maxWidth - 6 && y > 0) {
                 x++;
                 y--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     x--;
                     y++;
                 }
@@ -244,7 +332,7 @@ public class TanksGLEventListener extends TanksListener {
             if (y < maxHeight - 6 && x > 0) {
                 y++;
                 x--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     y--;
                     x++;
                 }
@@ -255,7 +343,7 @@ public class TanksGLEventListener extends TanksListener {
             if (y < maxHeight - 6 && x < maxWidth - 6) {
                 y++;
                 x++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     y--;
                     x--;
                 }
@@ -265,7 +353,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle left
             if (x > 0) {
                 x--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     x++;
                 }
             }
@@ -274,7 +362,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle right
             if (x < maxWidth - 6) {
                 x++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     x--;
                 }
             }
@@ -283,7 +371,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle up
             if (y < maxHeight - 6) {
                 y++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     y--;
                 }
             }
@@ -292,7 +380,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle down
             if (y > 0) {
                 y--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank1()) {
                     y++;
                 }
             }
@@ -305,7 +393,7 @@ public class TanksGLEventListener extends TanksListener {
         }else if (isKeyPressed(KeyEvent.VK_A)) {
             if (x2 > -maxWidth + 6) {
                 x2--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2++;
                 }
             }
@@ -313,7 +401,7 @@ public class TanksGLEventListener extends TanksListener {
         } else if (isKeyPressed(KeyEvent.VK_D)) {
             if (x2 < 0) {
                 x2++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2--;
                 }
             }
@@ -321,7 +409,7 @@ public class TanksGLEventListener extends TanksListener {
         } else if (isKeyPressed(KeyEvent.VK_W)) {
             if (y2 < 0) {
                 y2++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     y2--;
                 }
             }
@@ -329,7 +417,7 @@ public class TanksGLEventListener extends TanksListener {
         } else if (isKeyPressed(KeyEvent.VK_S)) {
             if (y2 > -maxHeight + 6) {
                 y2--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     y2++;
                 }
             }
@@ -338,7 +426,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 > -maxWidth + 6 && y2 < 0) {
                 x2--;
                 y2++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2++;
                     y2--;
                 }
@@ -348,7 +436,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 < 0 && y2 < 0) {
                 x2++;
                 y2++;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2--;
                     y2--;
                 }
@@ -358,7 +446,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
                 x2--;
                 y2--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2++;
                     y2++;
                 }
@@ -368,7 +456,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 < 0 && y2 > -maxHeight + 6) {
                 x2++;
                 y2--;
-                if (getDistance() < 6) {
+                if (getDistance() < 6 || isBullForTank2()) {
                     x2--;
                     y2++;
                 }

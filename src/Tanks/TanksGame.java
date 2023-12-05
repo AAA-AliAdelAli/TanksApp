@@ -22,6 +22,7 @@ public class TanksGame extends JFrame {
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
         glcanvas.addKeyListener(listener);
+        glcanvas.setFocusable(true);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         animator = new FPSAnimator(15);
         animator.add(glcanvas);
@@ -32,7 +33,5 @@ public class TanksGame extends JFrame {
         setSize(700, 700);
         setLocationRelativeTo(null);
         setVisible(true);
-        setFocusable(true);
-        glcanvas.requestFocus();
     }
 }
