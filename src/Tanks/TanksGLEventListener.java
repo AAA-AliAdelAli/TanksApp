@@ -48,24 +48,27 @@ public class TanksGLEventListener extends TanksListener {
     int x = 0, y = 0;
     int x2 = 0, y2 = 0;
 
-    Point2D bullsPositions[] = {
-        new Point2D(55, 30),
-        new Point2D(50, 30),
-        new Point2D(45, 30),
-        new Point2D(40, 30),
-        new Point2D(35, 30),
+    Point2D bricksPositions[] = {
+        new Point2D(54, 30),
+        new Point2D(48, 30),
+        new Point2D(42, 30),
+        new Point2D(36, 30),
         new Point2D(30, 30),
-        new Point2D(25, 30),
+        new Point2D(26, 30),
+        new Point2D(26, 24),
+        new Point2D(26, 18),
+        new Point2D(14, 30),
+        new Point2D(8, 30),
+    };
+    
+    Point2D whiteBricksPositions[] = {
         new Point2D(20, 30),
-        new Point2D(15, 30),
+        new Point2D(26, 12),
         
-        new Point2D(25, 25),
-        new Point2D(25, 20),
-        new Point2D(25, 15),
     };
     
 
-    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "Back.jpg"};
+    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -114,9 +117,12 @@ public class TanksGLEventListener extends TanksListener {
             DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             DrawTank(gl, x, y, animationIndex, 1, direction);
         
-        for (Point2D p: bullsPositions)
-            drawBull(gl, p);
+        for (Point2D p: bricksPositions)
+            drawBricks(gl, p, false);
 
+        for (Point2D p: whiteBricksPositions)
+            drawBricks(gl, p, true);
+        
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -181,13 +187,13 @@ public class TanksGLEventListener extends TanksListener {
         } else if (dir == Directions.D) {
             angle = -90;
         } else if (dir == Directions.S_D) {
-            angle = 135;
-        } else if (dir == Directions.S_A) {
             angle = -135;
+        } else if (dir == Directions.S_A) {
+            angle = 135;
         } else if (dir == Directions.W_A) {
-            angle = -45;
-        } else if (dir == Directions.W_D) {
             angle = 45;
+        } else if (dir == Directions.W_D) {
+            angle = -45;
         }
 
 
@@ -232,9 +238,11 @@ public class TanksGLEventListener extends TanksListener {
         gl.glDisable(GL.GL_BLEND);
     }
     
-    public void drawBull(GL gl, Point2D p) {
+    public void drawBricks(GL gl, Point2D p, boolean canBeCollapsed) {
+        int index = canBeCollapsed ? 6 : 5;
+        
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[5]);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
         
         gl.glPushMatrix();
             gl.glTranslated(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9, 0);
@@ -273,30 +281,46 @@ public class TanksGLEventListener extends TanksListener {
         return new Point2D(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9);
     }
     
-    private boolean isBullForTank1() {
+    private boolean isBricksForTank1() {
         Point2D tank1Position = getPosition(new Point2D(x, y), false),
-                bullPosition = new Point2D();
+                bricksPosition = new Point2D();
         
-        for (int i = 0; i < bullsPositions.length; i++) {
-            bullPosition = getPosition(bullsPositions[i], false);
-            double distance = tank1Position.getDistanceFrom(bullPosition);
+        for (Point2D p1: bricksPositions) {
+            bricksPosition = getPosition(p1, false);
+            double distance = tank1Position.getDistanceFrom(bricksPosition);
             
-            if (distance < .2)
+            if (distance < .195)
+                return true;
+        }
+        
+        for (Point2D p2: whiteBricksPositions) {
+            bricksPosition = getPosition(p2, false);
+            double distance = tank1Position.getDistanceFrom(bricksPosition);
+            
+            if (distance < .195)
                 return true;
         }
         
         return false;
     }
     
-    private boolean isBullForTank2() {
+    private boolean isBricksForTank2() {
         Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
-                bullPosition = new Point2D();
+                bricksPosition = new Point2D();
         
-        for (int i = 0; i < bullsPositions.length; i++) {
-            bullPosition = getPosition(bullsPositions[i], false);
-            double distance = tank2Position.getDistanceFrom(bullPosition);
+        for (Point2D p1: bricksPositions) {
+            bricksPosition = getPosition(p1, false);
+            double distance = tank2Position.getDistanceFrom(bricksPosition);
             
-            if (distance < .2)
+            if (distance < .195)
+                return true;
+        }
+        
+        for (Point2D p2: whiteBricksPositions) {
+            bricksPosition = getPosition(p2, false);
+            double distance = tank2Position.getDistanceFrom(bricksPosition);
+            
+            if (distance < .195)
                 return true;
         }
         
@@ -310,7 +334,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x > 0 && y > 0) {
                 x--;
                 y--;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     x++;
                     y++;
                 }
@@ -321,7 +345,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x < maxWidth - 6 && y > 0) {
                 x++;
                 y--;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     x--;
                     y++;
                 }
@@ -332,7 +356,7 @@ public class TanksGLEventListener extends TanksListener {
             if (y < maxHeight - 6 && x > 0) {
                 y++;
                 x--;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     y--;
                     x++;
                 }
@@ -343,7 +367,7 @@ public class TanksGLEventListener extends TanksListener {
             if (y < maxHeight - 6 && x < maxWidth - 6) {
                 y++;
                 x++;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     y--;
                     x--;
                 }
@@ -353,7 +377,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle left
             if (x > 0) {
                 x--;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     x++;
                 }
             }
@@ -362,7 +386,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle right
             if (x < maxWidth - 6) {
                 x++;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     x--;
                 }
             }
@@ -371,7 +395,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle up
             if (y < maxHeight - 6) {
                 y++;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     y--;
                 }
             }
@@ -380,7 +404,7 @@ public class TanksGLEventListener extends TanksListener {
             // Handle down
             if (y > 0) {
                 y--;
-                if (getDistance() < 6 || isBullForTank1()) {
+                if (getDistance() < 6 || isBricksForTank1()) {
                     y++;
                 }
             }
@@ -390,43 +414,11 @@ public class TanksGLEventListener extends TanksListener {
         //  player2
         if (isKeyPressed(KeyEvent.VK_Q)) {
             // fire
-        }else if (isKeyPressed(KeyEvent.VK_A)) {
-            if (x2 > -maxWidth + 6) {
-                x2--;
-                if (getDistance() < 6 || isBullForTank2()) {
-                    x2++;
-                }
-            }
-            direction2 = Directions.A;
-        } else if (isKeyPressed(KeyEvent.VK_D)) {
-            if (x2 < 0) {
-                x2++;
-                if (getDistance() < 6 || isBullForTank2()) {
-                    x2--;
-                }
-            }
-            direction2 = Directions.D;
-        } else if (isKeyPressed(KeyEvent.VK_W)) {
-            if (y2 < 0) {
-                y2++;
-                if (getDistance() < 6 || isBullForTank2()) {
-                    y2--;
-                }
-            }
-            direction2 = Directions.W;
-        } else if (isKeyPressed(KeyEvent.VK_S)) {
-            if (y2 > -maxHeight + 6) {
-                y2--;
-                if (getDistance() < 6 || isBullForTank2()) {
-                    y2++;
-                }
-            }
-            direction2 = Directions.S;
         } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
             if (x2 > -maxWidth + 6 && y2 < 0) {
                 x2--;
                 y2++;
-                if (getDistance() < 6 || isBullForTank2()) {
+                if (getDistance() < 6 || isBricksForTank2()) {
                     x2++;
                     y2--;
                 }
@@ -436,7 +428,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 < 0 && y2 < 0) {
                 x2++;
                 y2++;
-                if (getDistance() < 6 || isBullForTank2()) {
+                if (getDistance() < 6 || isBricksForTank2()) {
                     x2--;
                     y2--;
                 }
@@ -446,7 +438,7 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
                 x2--;
                 y2--;
-                if (getDistance() < 6 || isBullForTank2()) {
+                if (getDistance() < 6 || isBricksForTank2()) {
                     x2++;
                     y2++;
                 }
@@ -456,12 +448,44 @@ public class TanksGLEventListener extends TanksListener {
             if (x2 < 0 && y2 > -maxHeight + 6) {
                 x2++;
                 y2--;
-                if (getDistance() < 6 || isBullForTank2()) {
+                if (getDistance() < 6 || isBricksForTank2()) {
                     x2--;
                     y2++;
                 }
             }
             direction2 = Directions.S_D;
+        } else if (isKeyPressed(KeyEvent.VK_A)) {
+            if (x2 > -maxWidth + 6) {
+                x2--;
+                if (getDistance() < 6 || isBricksForTank2()) {
+                    x2++;
+                }
+            }
+            direction2 = Directions.A;
+        } else if (isKeyPressed(KeyEvent.VK_D)) {
+            if (x2 < 0) {
+                x2++;
+                if (getDistance() < 6 || isBricksForTank2()) {
+                    x2--;
+                }
+            }
+            direction2 = Directions.D;
+        } else if (isKeyPressed(KeyEvent.VK_W)) {
+            if (y2 < 0) {
+                y2++;
+                if (getDistance() < 6 || isBricksForTank2()) {
+                    y2--;
+                }
+            }
+            direction2 = Directions.W;
+        } else if (isKeyPressed(KeyEvent.VK_S)) {
+            if (y2 > -maxHeight + 6) {
+                y2--;
+                if (getDistance() < 6 || isBricksForTank2()) {
+                    y2++;
+                }
+            }
+            direction2 = Directions.S;
         }
 
     }
