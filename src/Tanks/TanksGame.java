@@ -2,6 +2,7 @@ package Tanks;
 
 import com.sun.opengl.util.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 import javax.media.opengl.*;
 import javax.swing.*;
 
@@ -21,6 +22,7 @@ public class TanksGame extends JFrame {
         TanksGLEventListener listener = new TanksGLEventListener();
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
+        glcanvas.addMouseListener( listener);
         glcanvas.addKeyListener(listener);
         glcanvas.setFocusable(true);
         getContentPane().add(glcanvas, BorderLayout.CENTER);

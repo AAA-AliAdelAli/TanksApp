@@ -10,11 +10,14 @@ import java.awt.event.*;
 import java.io.IOException;
 import javax.media.opengl.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
 
 public class TanksGLEventListener extends TanksListener {
     int animationIndex = 0;
+
 
     enum Directions {
 
@@ -41,33 +44,46 @@ public class TanksGLEventListener extends TanksListener {
 
     Directions direction2 = Directions.S;
     Directions direction = Directions.up;
+    ArrayList<Bullet> bullets =new ArrayList<>();
 
     int maxWidth = 60;
     int maxHeight = 60;
+    int xPosition = 0;
+
+    int yPosition = 0;
 
     int x = 0, y = 0;
+
     int x2 = 0, y2 = 0;
-
-    Point2D bricksPositions[] = {
-        new Point2D(54, 30),
-        new Point2D(48, 30),
-        new Point2D(42, 30),
-        new Point2D(36, 30),
-        new Point2D(30, 30),
-        new Point2D(26, 30),
-        new Point2D(26, 24),
-        new Point2D(26, 18),
-        new Point2D(14, 30),
-        new Point2D(8, 30),
-    };
+    int bullx =0 , bully =0 ;
+//    int x3 =0 , y3=0;
+int bulletX = 0;
+int bulletY = 0;
+    ArrayList<Point2D> bricksPositions = new ArrayList<>();
+    ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
+//    Point2D bricksPositions[] = {
+//
+//        new Point2D(48, 30),
+//        new Point2D(36, 30),
+//        new Point2D(42, 30),
+//        new Point2D(30, 30),
+//        new Point2D(26, 30),
+//        new Point2D(26, 24),
+//        new Point2D(26, 18),
+//        new Point2D(14, 30),
+//        new Point2D(8, 30),
+//    };
+//
+//    Point2D whiteBricksPositions[] = {
+//        new Point2D(54, 30),
+//        new Point2D(20, 30),
+//        new Point2D(26, 12),
+//        new Point2D(26, 30),
+//
+//
+//    };
     
-    Point2D whiteBricksPositions[] = {
-        new Point2D(20, 30),
-        new Point2D(26, 12),
-        
-    };
-    
-
+// bull index 4
     String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
@@ -85,6 +101,25 @@ public class TanksGLEventListener extends TanksListener {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
 
+        // Convert arrays to ArrayLists
+        bricksPositions.addAll(Arrays.asList(
+                new Point2D(48, 30),
+                new Point2D(36, 30),
+                new Point2D(42, 30),
+                new Point2D(30, 30),
+                new Point2D(26, 30),
+                new Point2D(26, 24),
+                new Point2D(26, 18),
+                new Point2D(14, 30),
+                new Point2D(8, 30)
+        ));
+
+        whiteBricksPositions.addAll(Arrays.asList(
+                new Point2D(54, 30),
+                new Point2D(20, 30),
+                new Point2D(26, 12),
+                new Point2D(26, 30)
+        ));
         for (int i = 0; i < textureNames.length; i++) {
             try {
                 texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
@@ -104,6 +139,7 @@ public class TanksGLEventListener extends TanksListener {
                 e.printStackTrace();
             }
         }
+
     }
 
     public void display(GLAutoDrawable gld) {
@@ -116,13 +152,135 @@ public class TanksGLEventListener extends TanksListener {
         animationIndex = animationIndex % 4;
             DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             DrawTank(gl, x, y, animationIndex, 1, direction);
-        
-        for (Point2D p: bricksPositions)
+        for (Point2D p : bricksPositions)
             drawBricks(gl, p, false);
 
-        for (Point2D p: whiteBricksPositions)
+        for (Point2D p : whiteBricksPositions)
             drawBricks(gl, p, true);
-        
+//bullet
+
+        for (Bullet bullet :bullets) {
+            if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                switch (bullet.directions) {
+                    case up:
+                        bullet.y++;
+                        break;
+                    case up_right:
+                        bullet.x++;
+                        bullet.y++;
+                        break;
+                    case right:
+                        bullet.x++;
+                        break;
+                    case down_right:
+                        bullet.x++;
+                        bullet.y--;
+                        break;
+                    case down:
+                        bullet.y--;
+                        break;
+                    case down_left:
+                        bullet.x--;
+                        bullet.y--;
+                        break;
+                    case left:
+                        bullet.x--;
+                        break;
+                    case up_left:
+                        bullet.x--;
+                        bullet.y++;
+                        break;
+                }
+
+
+                DrawTank(gl, bullet.x , bullet.y+1, textures[3], 0.3f, bullet.directions);
+                bullx = x ;
+                bully = y;
+                bulletX = bullet.x ;
+                bulletY = bullet.y;
+                boolean isPointInList = false;
+//                System.out.println(bullet.y +"-------" +bullet.x );
+//bull reach whiteBricksPositions
+                //error must break bulletX == 54 && bulletY == 30 first
+                if(bulletX == 54 && bulletY == 30  ){
+
+
+                    if (!whiteBricksPositions.isEmpty()) {
+                    for (Point2D point : whiteBricksPositions) {
+                        if ((point.x == 54 && point.y ==30 )) {
+                            isPointInList = true;
+                            break;
+                        }
+                    }
+                    }
+                    if (isPointInList) {
+                        whiteBricksPositions.remove(0);
+                        bullet.x=100;
+                        bullet.y=100;
+                    }
+
+
+                } else if( (bulletX == 20 && bulletY ==30 )){
+
+                     isPointInList = false;
+                    if (!whiteBricksPositions.isEmpty()) {
+                    for (Point2D point : whiteBricksPositions) {
+                        if ( (point.x == 20 && point.y ==30 )) {
+                            isPointInList = true;
+                            break;
+                        }
+                    }
+                    }
+                    if (isPointInList) {
+                        whiteBricksPositions.remove(0);
+                        bullet.x=100;
+                        bullet.y=100;
+                    }
+
+
+                }else if( (bulletX == 26 && bulletY ==12 )){
+
+                     isPointInList = false;
+                    if (!whiteBricksPositions.isEmpty()) {
+                        for (Point2D point : whiteBricksPositions) {
+                            if ( (point.x == 26 && point.y ==12 ) ) {
+                                isPointInList = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isPointInList) {
+                        whiteBricksPositions.remove(0);
+                        bullet.x=100;
+                        bullet.y=100;
+                    }
+
+
+                }else if( (bulletX == 26 && bulletY ==30   )){
+
+                    isPointInList = false;
+                    if (!whiteBricksPositions.isEmpty()) {
+                        for (Point2D point : whiteBricksPositions) {
+                            if ((point.x == 26 && point.y ==30 )) {
+                                isPointInList = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isPointInList) {
+                        whiteBricksPositions.remove(0);
+                        bullet.x=100;
+                        bullet.y=100;
+                    }
+
+
+                }
+            }
+
+        }
+//        System.out.println(bullets.get(0));
+
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -217,6 +375,31 @@ public class TanksGLEventListener extends TanksListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
+//    public void Drawenmay(GL gl,int x, int y, int index, float scale ,Directions dir){
+//        gl.glEnable(GL.GL_BLEND);
+//        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+//
+//
+//        gl.glPushMatrix();
+//        gl.glTranslated(x3 / (maxWidth / 2.0) + 0.9, y3 / (maxHeight / 2.0) + 0.9, 0);
+//        gl.glScaled(0.1*scale, 0.1*scale, 1);
+////        gl.glRotated(angle,0,0,1);
+//        //System.out.println(x +" " + y);
+//        gl.glBegin(GL.GL_QUADS);
+//        // Front Face
+//        gl.glTexCoord2f(0.0f, 0.0f);
+//        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+//        gl.glTexCoord2f(1.0f, 0.0f);
+//        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+//        gl.glTexCoord2f(1.0f, 1.0f);
+//        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+//        gl.glTexCoord2f(0.0f, 1.0f);
+//        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+//        gl.glEnd();
+//        gl.glPopMatrix();
+//
+//        gl.glDisable(GL.GL_BLEND);
+//    }
     public void DrawBackground(GL gl){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);    // Turn Blending On
@@ -329,7 +512,23 @@ public class TanksGLEventListener extends TanksListener {
     
     public void handleKeyPress () {
         if (isKeyPressed(KeyEvent.VK_SPACE)) {
-            // fire
+            //fire
+            if (bulletX == x && bulletY== y) {
+                bullets.add(new Bullet(direction, x, y));
+                System.out.println("bulletX1 :" + bulletX);
+                System.out.println("bulletY1 :" + bulletY);
+                System.out.println("X1 :" + x);
+                System.out.println("Y1 :" + y);
+                System.out.println(bullets.size());
+            }
+            else if ( (Math.abs(bulletX - x) >= 10) ||  (Math.abs(bulletY - y) >= 5)) {
+                bullets.add(new Bullet(direction, x, y));
+                System.out.println("bulletX2 :" + bulletX);
+                System.out.println("bulletY2 :" + bulletY);
+                System.out.println("X2 :" + x);
+                System.out.println("Y2 :" + y);
+                System.out.println(bullets.size());
+            }
         } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
             if (x > 0 && y > 0) {
                 x--;
@@ -414,6 +613,7 @@ public class TanksGLEventListener extends TanksListener {
         //  player2
         if (isKeyPressed(KeyEvent.VK_Q)) {
             // fire
+
         } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
             if (x2 > -maxWidth + 6 && y2 < 0) {
                 x2--;
@@ -492,6 +692,46 @@ public class TanksGLEventListener extends TanksListener {
 
 
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        double x4 = e.getX();
+        double y4 = e.getY();
+
+//        System.out.println(x + " " + y);
+        Component c = e.getComponent();
+        double width = c.getWidth();
+        double height = c.getHeight();
+//        System.out.println(width + " " + height);
+//get percent of GLCanvas instead of
+//points and then converting it to our
+//'100' based coordinate system.
+        xPosition = (int) ((x4 / width) * 60);
+        yPosition = ((int) ((y4 / height) * 60));
+        yPosition = 60 - yPosition;
+        System.out.println("x:" +xPosition + "---" +"y:" +yPosition);
+
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
     public BitSet keyBits = new BitSet(256);
 
     @Override
@@ -514,4 +754,5 @@ public class TanksGLEventListener extends TanksListener {
     public boolean isKeyPressed(final int keyCode) {
         return keyBits.get(keyCode);
     }
+
 }
