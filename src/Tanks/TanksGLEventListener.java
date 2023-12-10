@@ -23,9 +23,6 @@ public class TanksGLEventListener extends TanksListener {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[b.index]);
         
-        System.out.println("index: " + b.index);
-        System.out.println("x: " + b.position.x);
-        
         gl.glPushMatrix();
             gl.glTranslated(b.position.x / (maxWidth / 2.0) - 0.9, b.position.y / (maxHeight / 2.0) - 0.9, 0);
             gl.glScaled(.1, .1, 1);
@@ -34,6 +31,23 @@ public class TanksGLEventListener extends TanksListener {
         gl.glPopMatrix();
         
         gl.glDisable(GL.GL_BLEND);
+    }
+
+    private void checkBullet(Bullet bullet) {
+        for (int i = 0; i < currentMap.bricks.size(); i++) {
+                    if (bulletX >= currentMap.bricks.get(i).position.x - 4 &&
+                        bulletX <= currentMap.bricks.get(i).position.x + 4 &&
+                        bulletY >= currentMap.bricks.get(i).position.y - 5 &&
+                        bulletY <= currentMap.bricks.get(i).position.y + 5) {
+                        
+                        bullet.x = 100;
+                        bullet.y = 100;
+                        
+                        if (currentMap.bricks.get(i).canBeBroken)
+                            currentMap.bricks.remove(i);
+                    }
+                    
+                }
     }
 
 
@@ -82,7 +96,7 @@ public class TanksGLEventListener extends TanksListener {
 //    int x3 =0 , y3=0;
 int bulletX = 0;
 int bulletY = 0;
-    ArrayList<Point2D> bricksPositions = new ArrayList<>();
+//    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 //    Point2D bricksPositions[] = {
 //
@@ -222,7 +236,7 @@ int bulletY = 0;
             new Brick( new Point2D(42, 0), false )
         ));
         
-        currentMap = map1; // current leve
+        currentMap = map3; // current leve
         
         whiteBricksPositions = currentMap.getWhiteBricksPositions();
         
@@ -311,82 +325,84 @@ int bulletY = 0;
                 bulletX = bullet.x ;
                 bulletY = bullet.y;
                 boolean isPointInList = false;
+                
+                checkBullet(bullet);
 //                System.out.println(bullet.y +"-------" +bullet.x );
 //bull reach whiteBricksPositions
                 //error must break bulletX == 54 && bulletY == 30 first
-                if(bulletX == 54 && bulletY == 30  ){
-
-
-                    if (!whiteBricksPositions.isEmpty()) {
-                    for (Point2D point : whiteBricksPositions) {
-                        if ((point.x == 54 && point.y ==30 )) {
-                            isPointInList = true;
-                            break;
-                        }
-                    }
-                    }
-                    if (isPointInList) {
-                        whiteBricksPositions.remove(0);
-                        bullet.x=100;
-                        bullet.y=100;
-                    }
-
-
-                } else if( (bulletX == 20 && bulletY ==30 )){
-
-                     isPointInList = false;
-                    if (!whiteBricksPositions.isEmpty()) {
-                    for (Point2D point : whiteBricksPositions) {
-                        if ( (point.x == 20 && point.y ==30 )) {
-                            isPointInList = true;
-                            break;
-                        }
-                    }
-                    }
-                    if (isPointInList) {
-                        whiteBricksPositions.remove(0);
-                        bullet.x=100;
-                        bullet.y=100;
-                    }
-
-
-                }else if( (bulletX == 26 && bulletY ==12 )){
-
-                     isPointInList = false;
-                    if (!whiteBricksPositions.isEmpty()) {
-                        for (Point2D point : whiteBricksPositions) {
-                            if ( (point.x == 26 && point.y ==12 ) ) {
-                                isPointInList = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (isPointInList) {
-                        whiteBricksPositions.remove(0);
-                        bullet.x=100;
-                        bullet.y=100;
-                    }
-
-
-                }else if( (bulletX == 26 && bulletY ==30   )){
-
-                    isPointInList = false;
-                    if (!whiteBricksPositions.isEmpty()) {
-                        for (Point2D point : whiteBricksPositions) {
-                            if ((point.x == 26 && point.y ==30 )) {
-                                isPointInList = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (isPointInList) {
-                        whiteBricksPositions.remove(0);
-                        bullet.x=100;
-                        bullet.y=100;
-                    }
-
-
-                }
+//                if(bulletX == 54 && bulletY == 30  ){
+//
+//
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                    for (Point2D point : whiteBricksPositions) {
+//                        if ((point.x == 54 && point.y ==30 )) {
+//                            isPointInList = true;
+//                            break;
+//                        }
+//                    }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                } else if( (bulletX == 20 && bulletY ==30 )){
+//
+//                     isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                    for (Point2D point : whiteBricksPositions) {
+//                        if ( (point.x == 20 && point.y ==30 )) {
+//                            isPointInList = true;
+//                            break;
+//                        }
+//                    }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }else if( (bulletX == 26 && bulletY ==12 )){
+//
+//                     isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                        for (Point2D point : whiteBricksPositions) {
+//                            if ( (point.x == 26 && point.y ==12 ) ) {
+//                                isPointInList = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }else if( (bulletX == 26 && bulletY ==30   )){
+//
+//                    isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                        for (Point2D point : whiteBricksPositions) {
+//                            if ((point.x == 26 && point.y ==30 )) {
+//                                isPointInList = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }
             }
 
         }
