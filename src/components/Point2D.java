@@ -1,7 +1,7 @@
 package components;
 
 public class Point2D {
-    double x, y;
+    public double x, y;
     
     public Point2D() {
         

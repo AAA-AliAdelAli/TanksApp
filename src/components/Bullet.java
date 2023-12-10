@@ -1,10 +1,10 @@
 package components;
 
 public class Bullet {
-    TanksGLEventListener.Directions directions;
-    int x,y;
+    public TanksGLEventListener.Directions directions;
+    public int x,y;
 
-    boolean fired;
+    public boolean fired;
 
     public Bullet(TanksGLEventListener.Directions directions, int x, int y) {
         this.directions =directions;
