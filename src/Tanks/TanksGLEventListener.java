@@ -5,6 +5,7 @@ package Tanks;
 import Texture.TextureReader;
 import com.sun.opengl.util.Animator;
 
+import components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -18,8 +19,25 @@ import javax.media.opengl.glu.GLU;
 public class TanksGLEventListener extends TanksListener {
     int animationIndex = 0;
 
+    private void drawBrick(GL gl, Brick b) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[b.index]);
+        
+        System.out.println("index: " + b.index);
+        System.out.println("x: " + b.position.x);
+        
+        gl.glPushMatrix();
+            gl.glTranslated(b.position.x / (maxWidth / 2.0) - 0.9, b.position.y / (maxHeight / 2.0) - 0.9, 0);
+            gl.glScaled(.1, .1, 1);
+            
+            frontFace(gl);
+        gl.glPopMatrix();
+        
+        gl.glDisable(GL.GL_BLEND);
+    }
 
-    enum Directions {
+
+    public enum Directions {
 
         up,
         down,
@@ -45,6 +63,11 @@ public class TanksGLEventListener extends TanksListener {
     Directions direction2 = Directions.S;
     Directions direction = Directions.up;
     ArrayList<Bullet> bullets =new ArrayList<>();
+    Map map1 = new Map();
+    Map map2 = new Map();
+    Map map3 = new Map();
+    
+    Map currentMap = new Map();
 
     int maxWidth = 60;
     int maxHeight = 60;
@@ -102,24 +125,107 @@ int bulletY = 0;
         gl.glGenTextures(textureNames.length, textures, 0);
 
         // Convert arrays to ArrayLists
-        bricksPositions.addAll(Arrays.asList(
-                new Point2D(48, 30),
-                new Point2D(36, 30),
-                new Point2D(42, 30),
-                new Point2D(30, 30),
-                new Point2D(26, 30),
-                new Point2D(26, 24),
-                new Point2D(26, 18),
-                new Point2D(14, 30),
-                new Point2D(8, 30)
-        ));
+//        bricksPositions.addAll(Arrays.asList(
+//                new Point2D(48, 30),
+//                new Point2D(36, 30),
+//                new Point2D(42, 30),
+//                new Point2D(30, 30),
+//                new Point2D(26, 30),
+//                new Point2D(26, 24),
+//                new Point2D(26, 18),
+//                new Point2D(14, 30),
+//                new Point2D(8, 30)
+//        ));
 
-        whiteBricksPositions.addAll(Arrays.asList(
-                new Point2D(54, 30),
-                new Point2D(20, 30),
-                new Point2D(26, 12),
-                new Point2D(26, 30)
+//        whiteBricksPositions.addAll(Arrays.asList(
+//                new Point2D(54, 30),
+//                new Point2D(20, 30),
+//                new Point2D(26, 12),
+//                new Point2D(26, 30)
+//        ));
+
+        
+        // Level 1
+        map1.bricks.addAll(Arrays.asList(
+            new Brick(new Point2D(48, 30), false),
+            new Brick(new Point2D(36, 30), false),
+            new Brick(new Point2D(42, 30), false),
+            new Brick(new Point2D(30, 30), false),
+            new Brick(new Point2D(26, 30), false),
+            new Brick(new Point2D(26, 24), false),
+            new Brick(new Point2D(26, 18), false),
+            new Brick(new Point2D(14, 30), false),
+            new Brick(new Point2D(8, 30), false),
+            new Brick(new Point2D(54, 30), true),
+            new Brick(new Point2D(20, 30), true),
+            new Brick(new Point2D(26, 12), true),
+            new Brick(new Point2D(26, 30), true)
         ));
+        // Level 2
+        map2.bricks.addAll(Arrays.asList(
+            new Brick( new Point2D(30, 40), true ),
+            new Brick( new Point2D(36, 40), false ),
+            new Brick( new Point2D(24, 40), false ),
+            new Brick( new Point2D(18, 40), true ),
+            
+            new Brick( new Point2D(30, 20), true ),
+            new Brick( new Point2D(36, 20), false ),
+            new Brick( new Point2D(24, 20), false ),
+            new Brick( new Point2D(18, 20), true ),
+            
+            new Brick( new Point2D(48, 36), false ),
+            new Brick( new Point2D(48, 30), true ),
+            new Brick( new Point2D(48, 24), false ),
+            new Brick( new Point2D(48, 18), true ),
+            new Brick( new Point2D(48, 12), false ),
+            
+            new Brick( new Point2D(6, 36), false ),
+            new Brick( new Point2D(6, 30), true ),
+            new Brick( new Point2D(6, 24), false ),
+            new Brick( new Point2D(6, 18), true ),
+            new Brick( new Point2D(6, 12), false )
+        ));
+        // Level 3
+        map3.bricks.addAll(Arrays.asList(
+            new Brick( new Point2D(0, 12), false ),
+            new Brick( new Point2D(6, 12), false ),
+            new Brick( new Point2D(12, 12), false ),
+            new Brick( new Point2D(12, 6), true ),
+            new Brick( new Point2D(12, 0), false ),
+            
+            new Brick( new Point2D(12, 24), false ),
+            new Brick( new Point2D(12, 30), false ),
+            new Brick( new Point2D(12, 36), false ),
+            new Brick( new Point2D(12, 42), false ),
+            new Brick( new Point2D(12, 48), false ),
+            new Brick( new Point2D(12, 54), true ),
+            
+            new Brick( new Point2D(18, 42), false ),
+            new Brick( new Point2D(24, 42), false ),
+            new Brick( new Point2D(30, 42), false ),
+            new Brick( new Point2D(36, 42), false ),
+            new Brick( new Point2D(42, 42), false ),
+            
+            new Brick( new Point2D(18, 24), false ),
+            new Brick( new Point2D(24, 24), false ),
+            new Brick( new Point2D(30, 24), false ),
+            new Brick( new Point2D(36, 24), false ),
+            new Brick( new Point2D(42, 24), false ),
+            
+            new Brick( new Point2D(42, 42), false ),
+            new Brick( new Point2D(42, 36), false ),
+            new Brick( new Point2D(42, 30), false ),
+            new Brick( new Point2D(42, 24), false ),
+            new Brick( new Point2D(42, 18), true ),
+            new Brick( new Point2D(42, 12), false ),
+            new Brick( new Point2D(42, 6), false ),
+            new Brick( new Point2D(42, 0), false )
+        ));
+        
+        currentMap = map1; // current leve
+        
+        whiteBricksPositions = currentMap.getWhiteBricksPositions();
+        
         for (int i = 0; i < textureNames.length; i++) {
             try {
                 texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
@@ -152,11 +258,16 @@ int bulletY = 0;
         animationIndex = animationIndex % 4;
             DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             DrawTank(gl, x, y, animationIndex, 1, direction);
-        for (Point2D p : bricksPositions)
-            drawBricks(gl, p, false);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
 
-        for (Point2D p : whiteBricksPositions)
-            drawBricks(gl, p, true);
+        for (Brick b: currentMap.bricks)
+            drawBrick(gl, b);
+        
+        
 //bullet
 
         for (Bullet bullet :bullets) {
@@ -421,7 +532,7 @@ int bulletY = 0;
         gl.glDisable(GL.GL_BLEND);
     }
     
-    public void drawBricks(GL gl, Point2D p, boolean canBeCollapsed) {
+    public void drawBrick(GL gl, Point2D p, boolean canBeCollapsed) {
         int index = canBeCollapsed ? 6 : 5;
         
         gl.glEnable(GL.GL_BLEND);
@@ -464,20 +575,35 @@ int bulletY = 0;
         return new Point2D(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9);
     }
     
+//    private boolean isBricksForTank1() {
+//        Point2D tank1Position = getPosition(new Point2D(x, y), false),
+//                bricksPosition = new Point2D();
+//        
+//        for (Point2D p1: bricksPositions) {
+//            bricksPosition = getPosition(p1, false);
+//            double distance = tank1Position.getDistanceFrom(bricksPosition);
+//            
+//            if (distance < .195)
+//                return true;
+//        }
+//        
+//        for (Point2D p2: whiteBricksPositions) {
+//            bricksPosition = getPosition(p2, false);
+//            double distance = tank1Position.getDistanceFrom(bricksPosition);
+//            
+//            if (distance < .195)
+//                return true;
+//        }
+//        
+//        return false;
+//    }
+    
     private boolean isBricksForTank1() {
         Point2D tank1Position = getPosition(new Point2D(x, y), false),
                 bricksPosition = new Point2D();
         
-        for (Point2D p1: bricksPositions) {
-            bricksPosition = getPosition(p1, false);
-            double distance = tank1Position.getDistanceFrom(bricksPosition);
-            
-            if (distance < .195)
-                return true;
-        }
-        
-        for (Point2D p2: whiteBricksPositions) {
-            bricksPosition = getPosition(p2, false);
+        for (Brick b: currentMap.bricks) {
+            bricksPosition = getPosition(b.position, false);
             double distance = tank1Position.getDistanceFrom(bricksPosition);
             
             if (distance < .195)
@@ -491,16 +617,8 @@ int bulletY = 0;
         Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
                 bricksPosition = new Point2D();
         
-        for (Point2D p1: bricksPositions) {
-            bricksPosition = getPosition(p1, false);
-            double distance = tank2Position.getDistanceFrom(bricksPosition);
-            
-            if (distance < .195)
-                return true;
-        }
-        
-        for (Point2D p2: whiteBricksPositions) {
-            bricksPosition = getPosition(p2, false);
+        for (Brick b: currentMap.bricks) {
+            bricksPosition = getPosition(b.position, false);
             double distance = tank2Position.getDistanceFrom(bricksPosition);
             
             if (distance < .195)
@@ -509,6 +627,29 @@ int bulletY = 0;
         
         return false;
     }
+    
+//    private boolean isBricksForTank2() {
+//        Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
+//                bricksPosition = new Point2D();
+//        
+//        for (Point2D p1: bricksPositions) {
+//            bricksPosition = getPosition(p1, false);
+//            double distance = tank2Position.getDistanceFrom(bricksPosition);
+//            
+//            if (distance < .195)
+//                return true;
+//        }
+//        
+//        for (Point2D p2: whiteBricksPositions) {
+//            bricksPosition = getPosition(p2, false);
+//            double distance = tank2Position.getDistanceFrom(bricksPosition);
+//            
+//            if (distance < .195)
+//                return true;
+//        }
+//        
+//        return false;
+//    }
     
     public void handleKeyPress () {
         if (isKeyPressed(KeyEvent.VK_SPACE)) {

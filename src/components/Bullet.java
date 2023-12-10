@@ -1,4 +1,4 @@
-package Tanks;
+package components;
 
 public class Bullet {
     TanksGLEventListener.Directions directions;
