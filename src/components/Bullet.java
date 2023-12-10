@@ -1,5 +1,8 @@
 package components;
 
+import Tanks.TanksGLEventListener;
+
+
 public class Bullet {
     public TanksGLEventListener.Directions directions;
     public int x,y;
