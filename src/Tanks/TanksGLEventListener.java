@@ -77,6 +77,7 @@ public class TanksGLEventListener extends TanksListener {
     Directions direction2 = Directions.S;
     Directions direction = Directions.up;
     ArrayList<Bullet> bullets =new ArrayList<>();
+    ArrayList<Bullet> bullets2 =new ArrayList<>();
     Map map1 = new Map();
     Map map2 = new Map();
     Map map3 = new Map();
@@ -284,6 +285,7 @@ int bulletY = 0;
         
 //bullet
 
+
         for (Bullet bullet :bullets) {
             if (bullet.fired) {
 //                System.out.println(bullet.fired);
@@ -326,6 +328,128 @@ int bulletY = 0;
                 bulletY = bullet.y;
                 boolean isPointInList = false;
                 
+                checkBullet(bullet);
+//                System.out.println(bullet.y +"-------" +bullet.x );
+//bull reach whiteBricksPositions
+                //error must break bulletX == 54 && bulletY == 30 first
+//                if(bulletX == 54 && bulletY == 30  ){
+//
+//
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                    for (Point2D point : whiteBricksPositions) {
+//                        if ((point.x == 54 && point.y ==30 )) {
+//                            isPointInList = true;
+//                            break;
+//                        }
+//                    }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                } else if( (bulletX == 20 && bulletY ==30 )){
+//
+//                     isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                    for (Point2D point : whiteBricksPositions) {
+//                        if ( (point.x == 20 && point.y ==30 )) {
+//                            isPointInList = true;
+//                            break;
+//                        }
+//                    }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }else if( (bulletX == 26 && bulletY ==12 )){
+//
+//                     isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                        for (Point2D point : whiteBricksPositions) {
+//                            if ( (point.x == 26 && point.y ==12 ) ) {
+//                                isPointInList = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }else if( (bulletX == 26 && bulletY ==30   )){
+//
+//                    isPointInList = false;
+//                    if (!whiteBricksPositions.isEmpty()) {
+//                        for (Point2D point : whiteBricksPositions) {
+//                            if ((point.x == 26 && point.y ==30 )) {
+//                                isPointInList = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (isPointInList) {
+//                        whiteBricksPositions.remove(0);
+//                        bullet.x=100;
+//                        bullet.y=100;
+//                    }
+//
+//
+//                }
+            }
+
+        }
+        for (Bullet bullet :bullets2) {
+            if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                switch (bullet.directions) {
+                    case W:
+                        bullet.y++;
+                        break;
+                    case W_D:
+                        bullet.x++;
+                        bullet.y++;
+                        break;
+                    case D:
+                        bullet.x++;
+                        break;
+                    case S_D:
+                        bullet.x++;
+                        bullet.y--;
+                        break;
+                    case S:
+                        bullet.y--;
+                        break;
+                    case S_A:
+                        bullet.x--;
+                        bullet.y--;
+                        break;
+                    case A:
+                        bullet.x--;
+                        break;
+                    case W_A:
+                        bullet.x--;
+                        bullet.y++;
+                        break;
+                }
+
+
+                DrawTank2(gl, bullet.x , bullet.y+1, textures[3], 0.3f, bullet.directions);
+                bullx = x ;
+                bully = y;
+                bulletX = bullet.x ;
+                bulletY = bullet.y;
+                boolean isPointInList = false;
+
                 checkBullet(bullet);
 //                System.out.println(bullet.y +"-------" +bullet.x );
 //bull reach whiteBricksPositions
@@ -770,6 +894,23 @@ int bulletY = 0;
         //  player2
         if (isKeyPressed(KeyEvent.VK_Q)) {
             // fire
+            bullets2.add(new Bullet(direction2, x2, y2));
+//            if (bulletX == x && bulletY== y) {
+//                bullets.add(new Bullet(direction2, 54-x2,54- y2));
+//                System.out.println("bulletX1 :" + bulletX);
+//                System.out.println("bulletY1 :" + bulletY);
+//                System.out.println("X1 :" + x);
+//                System.out.println("Y1 :" + y);
+//                System.out.println(bullets.size());
+//            }
+//            else if ( (Math.abs(bulletX - x) >= 10) ||  (Math.abs(bulletY - y) >= 5)) {
+//                bullets.add(new Bullet(direction2,54- x2,54-y2));
+//                System.out.println("bulletX2 :" + bulletX);
+//                System.out.println("bulletY2 :" + bulletY);
+//                System.out.println("X2 :" + x);
+//                System.out.println("Y2 :" + y);
+//                System.out.println(bullets.size());
+//            }
 
         } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
             if (x2 > -maxWidth + 6 && y2 < 0) {
