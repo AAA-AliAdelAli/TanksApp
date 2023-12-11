@@ -26,9 +26,18 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHard2=1;
     double EnemyYHardII=0;
     double EnemyYHardII2=1;
+    double EnemyYHardIII=54;
+    boolean turned=false;
+    double EnemyYHardIII2=0;
+
 
     double EnemyXMid=18;
     double EnemyXMid2=0.6;
+    double EnemyXHard=20;
+    double EnemyXHard2=1;
+    double EnemyYHardIIII=19;
+    Directions EnemyDirHardIIII=Directions.up;
+    double EnemyYHardIIII2=1;
 
     boolean winner;
     
@@ -104,6 +113,7 @@ public class TanksGLEventListener extends TanksListener {
     Directions EnemyDirMed2 = Directions.right;
     Directions EnemyDirHard = Directions.up;
     Directions EnemyDirHardII=Directions.up;
+    Directions EnemyDirHardIII=Directions.right;
 
 
     ArrayList<Bullet> bullets;
@@ -339,13 +349,68 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     y=0;
                 }
             } else if (hard) {
-                System.out.println(x);
+                System.out.println("x: "+x);
+                System.out.println("y: "+y);
                 currentMap = map3;
                 DrawTank(gl,18,EnemyYHard,animationIndex,1,EnemyDirHard);
                 DrawTank(gl,48,EnemyYHardII,animationIndex,1,EnemyDirHardII);
+                DrawTank(gl,EnemyXHard,EnemyYHardIII,animationIndex,1,EnemyDirHardIII);
+                DrawTank(gl,0,EnemyYHardIIII,animationIndex,1,EnemyDirHardIIII);
+                EnemyYHardIIII+=EnemyYHardIIII2;
+                if (EnemyYHardIIII>53){
+                    EnemyDirHardIIII=Directions.down;
+                    EnemyYHardIIII2=-1;
+                }
+                if (EnemyYHardIIII<19){
+                    EnemyDirHardIIII=Directions.up;
+                    EnemyYHardIIII2=1;
+                }
+                if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
+                    x=0;
+                    y=0;
+                }
+
+
+                EnemyXHard+=EnemyXHard2;
+                EnemyYHardIII+=EnemyYHardIII2;
+
 
                 EnemyYHard+=EnemyYHard2;
                 EnemyYHardII+=EnemyYHardII2;
+
+                if (EnemyXHard>42){
+                    EnemyDirHardIII=Directions.down;
+                    EnemyXHard2=0;
+                    EnemyYHardIII2=-1;
+                    turned=true;
+                }
+                if (EnemyYHardIII<49){
+                    EnemyDirHardIII=Directions.left;
+                    EnemyYHardIII2=0;
+                    EnemyXHard2=-1;
+                }
+
+                if (EnemyXHard<19){
+                    EnemyDirHardIII=Directions.up;
+                    EnemyYHardIII2=1;
+                    EnemyXHard2=0;
+                }
+                if (EnemyYHardIII>53&&EnemyXHard<19){
+                    EnemyDirHardIII=Directions.right;
+                    EnemyYHardIII2=0;
+                    EnemyXHard2=1;
+//                    turned=false;
+                }
+                if (Math.sqrt((x - EnemyXHard)*(x - EnemyXHard)+(y - EnemyYHardIII)*(y - EnemyYHardIII))<6){
+                    x=0;
+                    y=0;
+                }
+
+
+
+
+
+
                 if (EnemyYHardII>54){
                     EnemyDirHardII=Directions.down;
                     EnemyYHardII2=-1;
