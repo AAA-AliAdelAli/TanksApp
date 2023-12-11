@@ -145,7 +145,7 @@ int lives, lives2;
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 
 // bull index 4
-    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png",
+    String textureNames[] = {"tankUp.png", "tankUp2.png","tankLeft.png","tankDown.png",
         "bull.png", "bricks.png", "white_bricks.png",
         "home.jpg","level.jpg", "win.png", "gameover.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
@@ -315,8 +315,9 @@ int lives, lives2;
             int level = 12;
             DrawBackground(gl, level);
             if (easy) {
+                System.out.println("x2: "+x2);
                 currentMap = map1;
-                DrawTank(gl,EnemyX,EnemyY,animationIndex,1,EnemyDir);
+                DrawTank(gl,EnemyX,EnemyY,1,1,EnemyDir);
                 EnemyX+=EnemyX2;
                 if (EnemyX>54){
                     EnemyDir=Directions.left;
@@ -334,14 +335,18 @@ int lives, lives2;
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
+                if (Math.sqrt(((x2+54) - EnemyX)*((x2+54) - EnemyX)+((y2+54) - EnemyY)*((y2+54) - EnemyY))<6){
+                    x2=0;
+                    y2=0;
+                }
 
                 displayVar(g, gld);
 
             } else if (medium) {
                 currentMap = map2;
 //
-                DrawTank(gl,54,EnemyY,animationIndex,1,EnemyDirMed);
-                DrawTank(gl,EnemyXMid,30,animationIndex,1,EnemyDirMed2);
+                DrawTank(gl,54,EnemyY,1,1,EnemyDirMed);
+                DrawTank(gl,EnemyXMid,30,1,1,EnemyDirMed2);
                 EnemyXMid+=EnemyXMid2;
                 EnemyY+=EnemyY2;
                 if (EnemyXMid>41){
@@ -371,16 +376,30 @@ int lives, lives2;
                     y=0;
                     if (--lives == 0) gameOver = true;
                 }
+
+
+                if (Math.sqrt(((x2+54) - EnemyXMid)*((x2+54) - EnemyXMid)+((y2+54) - 30)*((y2+54) - 30))<6){
+                    x2=0;
+                    y2=0;
+                    if (--lives == 0) gameOver = true;
+
+                }
+                if (Math.sqrt(((x2+54) - 54)*((x2+54) - 54)+((y2+54) - EnemyY)*((y2+54) - EnemyY))<6){
+                    x2=0;
+                    y2=0;
+                    if (--lives == 0) gameOver = true;
+                }
+
                 displayVar(g, gld);
                 
             } else if (hard) {
                 System.out.println("x: "+x);
                 System.out.println("y: "+y);
                 currentMap = map3;
-                DrawTank(gl,18,EnemyYHard,animationIndex,1,EnemyDirHard);
-                DrawTank(gl,48,EnemyYHardII,animationIndex,1,EnemyDirHardII);
-                DrawTank(gl,EnemyXHard,EnemyYHardIII,animationIndex,1,EnemyDirHardIII);
-                DrawTank(gl,0,EnemyYHardIIII,animationIndex,1,EnemyDirHardIIII);
+                DrawTank(gl,18,EnemyYHard,1,1,EnemyDirHard);
+                DrawTank(gl,48,EnemyYHardII,1,1,EnemyDirHardII);
+                DrawTank(gl,EnemyXHard,EnemyYHardIII,1,1,EnemyDirHardIII);
+                DrawTank(gl,0,EnemyYHardIIII,1,1,EnemyDirHardIIII);
                 EnemyYHardIIII+=EnemyYHardIIII2;
                 if (EnemyYHardIIII>53){
                     EnemyDirHardIIII=Directions.down;
@@ -390,6 +409,12 @@ int lives, lives2;
                     EnemyDirHardIIII=Directions.up;
                     EnemyYHardIIII2=1;
                 }
+                if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
+                    x=0;
+                    y=0;
+                    if (--lives == 0) gameOver = true;
+                }
+
                 if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
                     x=0;
                     y=0;
@@ -433,11 +458,6 @@ int lives, lives2;
                     if (--lives == 0) gameOver = true;
                 }
 
-
-
-
-
-
                 if (EnemyYHardII>54){
                     EnemyDirHardII=Directions.down;
                     EnemyYHardII2=-1;
@@ -467,7 +487,7 @@ int lives, lives2;
                     if (--lives == 0) gameOver = true;
                 }
 
-
+                displayVar(g, gld);
             }
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
