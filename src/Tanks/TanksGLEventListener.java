@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
+import javax.swing.*;
 
 public class TanksGLEventListener extends TanksListener {
     int animationIndex = 0;
@@ -31,6 +32,8 @@ public class TanksGLEventListener extends TanksListener {
     boolean turned=false;
     double EnemyYHardIII2=0;
     int score=0;
+    int lives=5;
+    int counter=0;
     GLUT g = new GLUT();
 
 
@@ -254,7 +257,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
     }
     
     public void init(GLAutoDrawable gld) {
-
+        newGame();
         GL gl = gld.getGL();
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
 
@@ -316,10 +319,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (getEnemyDistance()<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
+
                 displayVar(g, gld);
 
 
@@ -349,10 +354,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - EnemyXMid)*(x - EnemyXMid)+(y - 30)*(y - 30))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
                 if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
                 displayVar(g, gld);
             } else if (hard) {
@@ -375,6 +382,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
 
 
@@ -411,6 +419,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - EnemyXHard)*(x - EnemyXHard)+(y - EnemyYHardIII)*(y - EnemyYHardIII))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
 
 
@@ -421,6 +430,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (EnemyYHardII>54){
                     EnemyDirHardII=Directions.down;
                     EnemyYHardII2=-1;
+
                 }
                 if (EnemyYHardII<0){
                     EnemyDirHardII=Directions.up;
@@ -438,10 +448,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - 18)*(x - 18)+(y - EnemyYHard)*(y - EnemyYHard))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
                 if (Math.sqrt((x - 48)*(x - 48)+(y - EnemyYHardII)*(y - EnemyYHardII))<6){
                     x=0;
                     y=0;
+                    lives--;
                 }
                 displayVar(g, gld);
 
@@ -556,14 +568,16 @@ int bulletX, bulletY, bulletX2, bulletY2;
         gl2.glRasterPos2f(-.92f, .9f);
         g.glutBitmapString(5, "Score ");
         g.glutBitmapString(5, Integer.toString(score));
-//        gl2.glRasterPos2f(-.8f, .84f);
-//        g.glutBitmapString(5, "tank  ");
-//
-//        g.glutBitmapString(5, Integer.toString(tank / 17));
-//        gl2.glRasterPos2f(-.8f, .77f);
-//        g.glutBitmapString(5, "Timer  ");
-//
-//        g.glutBitmapString(5, Long.toString(counter));
+
+
+        gl2.glRasterPos2f(-.92f, .82f);
+        g.glutBitmapString(5, "Lives  ");
+        g.glutBitmapString(5, Integer.toString(lives));
+
+        gl2.glRasterPos2f(-.92f, .74f);
+        g.glutBitmapString(5, "Timer  ");
+        g.glutBitmapString(5, Long.toString(counter));
+
 //        gl2.glRasterPos2f(-.8f, .7f);
 //        g.glutBitmapString(5, "lives  ");
 //
@@ -575,7 +589,16 @@ int bulletX, bulletY, bulletX2, bulletY2;
     }
 
 
+    public void newGame() {
+        //start counter in text field
+        javax.swing.Timer timer = new Timer(900, e -> {
+            //start counter in text field
+            counter++;
+            System.out.println(counter);
 
+        });
+        timer.start();
+    }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
