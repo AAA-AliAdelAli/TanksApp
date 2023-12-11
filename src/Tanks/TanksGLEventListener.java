@@ -338,6 +338,8 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - EnemyX)*((x2+54) - EnemyX)+((y2+54) - EnemyY)*((y2+54) - EnemyY))<6){
                     x2=0;
                     y2=0;
+                    if (--lives2 == 0) gameOver = true;
+
                 }
 
             } else if (medium) {
@@ -379,13 +381,13 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - EnemyXMid)*((x2+54) - EnemyXMid)+((y2+54) - 30)*((y2+54) - 30))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
 
                 }
                 if (Math.sqrt(((x2+54) - 54)*((x2+54) - 54)+((y2+54) - EnemyY)*((y2+54) - EnemyY))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
                 }
                 
             } else if (hard) {
@@ -414,7 +416,7 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - 0)*((x2+54) - 0)+((y2+54) - EnemyYHardIIII)*((y2+54) - EnemyYHardIIII))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
                 }
 
 
@@ -456,7 +458,7 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - EnemyXHard)*((x2+54) - EnemyXHard)+((y2+54) - EnemyYHardIII)*((y2+54) - EnemyYHardIII))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
                 }
 
                 if (EnemyYHardII>54){
@@ -485,7 +487,7 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - 18)*((x2+54) - 18)+((y+54) - EnemyYHard)*((y2+54) - EnemyYHard))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
                 }
                 if (Math.sqrt((x - 48)*(x - 48)+(y - EnemyYHardII)*(y - EnemyYHardII))<6){
                     x=0;
@@ -495,7 +497,7 @@ int lives, lives2;
                 if (Math.sqrt(((x2+54) - 48)*((x2+54) - 48)+((y2+54) - EnemyYHardII)*((y2+54) - EnemyYHardII))<6){
                     x2=0;
                     y2=0;
-                    if (--lives == 0) gameOver = true;
+                    if (--lives2 == 0) gameOver = true;
                 }
 
                 displayVar(g, gld);
