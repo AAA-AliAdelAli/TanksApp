@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
+import javax.swing.*;
 
 public class TanksGLEventListener extends TanksListener {
     int animationIndex = 0;
@@ -31,6 +32,7 @@ public class TanksGLEventListener extends TanksListener {
     boolean turned=false;
     double EnemyYHardIII2=0;
     int score=0;
+    int counter=0;
     GLUT g = new GLUT();
 
 
@@ -257,7 +259,7 @@ int lifes;
     }
     
     public void init(GLAutoDrawable gld) {
-
+        newGame();
         GL gl = gld.getGL();
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
 
@@ -327,6 +329,7 @@ int lifes;
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
+
                 displayVar(g, gld);
 
             } else if (medium) {
@@ -433,6 +436,7 @@ int lifes;
                 if (EnemyYHardII>54){
                     EnemyDirHardII=Directions.down;
                     EnemyYHardII2=-1;
+
                 }
                 if (EnemyYHardII<0){
                     EnemyDirHardII=Directions.up;
@@ -574,14 +578,16 @@ int lifes;
         gl2.glRasterPos2f(-.92f, .9f);
         g.glutBitmapString(5, "Score ");
         g.glutBitmapString(5, Integer.toString(score));
-//        gl2.glRasterPos2f(-.8f, .84f);
-//        g.glutBitmapString(5, "tank  ");
-//
-//        g.glutBitmapString(5, Integer.toString(tank / 17));
-//        gl2.glRasterPos2f(-.8f, .77f);
-//        g.glutBitmapString(5, "Timer  ");
-//
-//        g.glutBitmapString(5, Long.toString(counter));
+
+
+        gl2.glRasterPos2f(-.92f, .82f);
+        g.glutBitmapString(3, "Lifes  ");
+        g.glutBitmapString(3, Integer.toString(lifes));
+
+        gl2.glRasterPos2f(-.92f, .74f);
+        g.glutBitmapString(5, "Timer  ");
+        g.glutBitmapString(5, Long.toString(counter));
+
 //        gl2.glRasterPos2f(-.8f, .7f);
 //        g.glutBitmapString(5, "lives  ");
 //
@@ -590,6 +596,18 @@ int lifes;
         gl2.glEnd();
 
 
+    }
+
+
+    public void newGame() {
+        //start counter in text field
+        javax.swing.Timer timer = new Timer(900, e -> {
+            //start counter in text field
+            counter++;
+            System.out.println(counter);
+
+        });
+        timer.start();
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
