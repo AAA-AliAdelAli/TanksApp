@@ -348,6 +348,14 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     EnemyDirHard=Directions.up;
                     EnemyYHard2=1;
                 }
+                if (Math.sqrt((x - 18)*(x - 18)+(y - EnemyYHard)*(y - EnemyYHard))<6){
+                    x=0;
+                    y=0;
+                }
+//                if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
+//                    x=0;
+//                    y=0;
+//                }
 
 
             }
