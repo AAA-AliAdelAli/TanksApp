@@ -24,6 +24,8 @@ public class TanksGLEventListener extends TanksListener {
     int EnemyY2=1;
     double EnemyYHard=0;
     double EnemyYHard2=1;
+    double EnemyYHardII=0;
+    double EnemyYHardII2=1;
 
     double EnemyXMid=18;
     double EnemyXMid2=0.6;
@@ -101,6 +103,8 @@ public class TanksGLEventListener extends TanksListener {
     Directions EnemyDirMed = Directions.up;
     Directions EnemyDirMed2 = Directions.right;
     Directions EnemyDirHard = Directions.up;
+    Directions EnemyDirHardII=Directions.up;
+
 
     ArrayList<Bullet> bullets;
     ArrayList<Bullet> bullets2;
@@ -338,7 +342,18 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 System.out.println(x);
                 currentMap = map3;
                 DrawTank(gl,18,EnemyYHard,animationIndex,1,EnemyDirHard);
+                DrawTank(gl,48,EnemyYHardII,animationIndex,1,EnemyDirHardII);
+
                 EnemyYHard+=EnemyYHard2;
+                EnemyYHardII+=EnemyYHardII2;
+                if (EnemyYHardII>54){
+                    EnemyDirHardII=Directions.down;
+                    EnemyYHardII2=-1;
+                }
+                if (EnemyYHardII<0){
+                    EnemyDirHardII=Directions.up;
+                    EnemyYHardII2=1;
+                }
 
                 if (EnemyYHard>18){
                     EnemyDirHard=Directions.down;
@@ -352,10 +367,10 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     x=0;
                     y=0;
                 }
-//                if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
-//                    x=0;
-//                    y=0;
-//                }
+                if (Math.sqrt((x - 48)*(x - 48)+(y - EnemyYHardII)*(y - EnemyYHardII))<6){
+                    x=0;
+                    y=0;
+                }
 
 
             }
