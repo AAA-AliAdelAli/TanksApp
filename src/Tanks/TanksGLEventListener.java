@@ -40,7 +40,7 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardIIII2=1;
 
     boolean winner;
-    
+    boolean check_player2= false;
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[b.index]);
@@ -290,9 +290,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
 
         if (home) {
             DrawBackground(gl, 8);
-        } else if (onePlayer || twoPlayer){
+        } else if (onePlayer ){
             DrawBackground(gl, 9);
 
+        } else if (twoPlayer) {
+            DrawBackground(gl ,9);
+            check_player2= true;
         } else if ( easy || medium || hard ) {
             int level = 12;
             DrawBackground(gl, level);
@@ -441,7 +444,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
             }
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
-            if (twoPlayer) {
+            if (check_player2) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             }
             for (Brick b : currentMap.bricks)
@@ -493,7 +496,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 }
             }
             //make shot if two player only
-            if (twoPlayer){
+            if (check_player2){
             for (Bullet bullet :bullets2) {
                 if (bullet.fired) {
 //                System.out.println(bullet.fired);
@@ -730,28 +733,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         return new Point2D(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9);
     }
     
-//    private boolean isBricksForTank1() {
-//        Point2D tank1Position = getPosition(new Point2D(x, y), false),
-//                bricksPosition = new Point2D();
-//        
-//        for (Point2D p1: bricksPositions) {
-//            bricksPosition = getPosition(p1, false);
-//            double distance = tank1Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        for (Point2D p2: whiteBricksPositions) {
-//            bricksPosition = getPosition(p2, false);
-//            double distance = tank1Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        return false;
-//    }
+
     
     private boolean isBricksForTank1() {
         Point2D tank1Position = getPosition(new Point2D(x, y), false),
@@ -783,29 +765,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         return false;
     }
     
-//    private boolean isBricksForTank2() {
-//        Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
-//                bricksPosition = new Point2D();
-//        
-//        for (Point2D p1: bricksPositions) {
-//            bricksPosition = getPosition(p1, false);
-//            double distance = tank2Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        for (Point2D p2: whiteBricksPositions) {
-//            bricksPosition = getPosition(p2, false);
-//            double distance = tank2Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        return false;
-//    }
-    
+
    public void handleKeyPress () {
         if (home ==false && onePlayer == false ) {
             if (isKeyPressed(KeyEvent.VK_SPACE)) {
@@ -1018,9 +978,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
         xPosition = (int) ((x4 / width) * 60);
         yPosition = 60 - (int) ((y4 / height) * 60);
 
-        
+        System.out.println("x:"+xPosition + "y"+yPosition);
 
         if (home) {
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 47 && yPosition >= 40) {
                 System.out.println("Entering onePlayer block");
                 home = false;
@@ -1035,39 +998,53 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 home = false;
                 twoPlayer = true;
             }
-        } else if (onePlayer) {
+        }
+        if (onePlayer) {
+            System.out.println("palyer1");
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
+            if (xPosition >=0 && xPosition<=7 && yPosition>=54 &&yPosition<=60 ){
+                homePage();
+            }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
-//                System.out.println("Entering easy block");
                 easy = true;
                 onePlayer =false;
 
-                // Draw the level selection screen for 'easy'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
-//                System.out.println("Entering medium block");
+
                 medium = true;
                 onePlayer = false;
-                // Draw the level selection screen for 'medium'
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
-//                System.out.println("Entering hard block");
                 hard = true;
                 onePlayer =false;
 
-                // Draw the level selection screen for 'hard'
             }
-        } else if (twoPlayer) {
+        }
+        if (twoPlayer) {
+            System.out.println("player2");
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
+            if (xPosition >=0 && xPosition<=7 && yPosition>=54 &&yPosition<=60 ){
+                homePage();
+            }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
-//                System.out.println("Entering easy block");
                 easy = true;
+                twoPlayer =false;
 
-                // Draw the level selection screen for 'easy'
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
-//                System.out.println("Entering medium block");
                 medium = true;
+                twoPlayer=false;
+
 
                 // Draw the level selection screen for 'medium'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
 //                System.out.println("Entering hard block");
                 hard = true;
+                twoPlayer=false;
 
                 // Draw the level selection screen for 'hard'
             }
