@@ -584,21 +584,24 @@ int lives, lives2;
         g.glutBitmapString(5, "Player1 Score ");
         g.glutBitmapString(5, Integer.toString(score));
 
-        gl2.glRasterPos2f(-.92f, .82f);
-        g.glutBitmapString(5, "Player2 Score ");
-        g.glutBitmapString(5, Integer.toString(score2));
-
         gl2.glRasterPos2f(-.92f, .74f);
         g.glutBitmapString(5, "Player1 Lives  ");
         g.glutBitmapString(5, Integer.toString(lives));
 
-        gl2.glRasterPos2f(-.92f, .66f);
-        g.glutBitmapString(5, "Player2 Lives  ");
-        g.glutBitmapString(5, Integer.toString(lives2));
         
         gl2.glRasterPos2f(-.92f, .60f);
         g.glutBitmapString(5, "Timer  ");
         g.glutBitmapString(5, Long.toString(counter));
+        
+        if (check_player2) {
+            gl2.glRasterPos2f(-.92f, .82f);
+            g.glutBitmapString(5, "Player2 Score ");
+            g.glutBitmapString(5, Integer.toString(score2));
+
+            gl2.glRasterPos2f(-.92f, .66f);
+            g.glutBitmapString(5, "Player2 Lives  ");
+            g.glutBitmapString(5, Integer.toString(lives2));
+        }
 
 //        gl2.glRasterPos2f(-.8f, .7f);
 //        g.glutBitmapString(5, "lives  ");
