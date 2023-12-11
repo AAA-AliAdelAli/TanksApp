@@ -375,10 +375,6 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
 
 
-
-
-
-
     }
   
 
