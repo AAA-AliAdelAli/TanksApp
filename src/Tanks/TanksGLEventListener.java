@@ -4,8 +4,8 @@ package Tanks;
 
 import Texture.TextureReader;
 import com.sun.opengl.util.Animator;
-
 import com.sun.opengl.util.GLUT;
+
 import components.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -41,9 +41,8 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardIIII=19;
     Directions EnemyDirHardIIII=Directions.up;
     double EnemyYHardIIII2=1;
-
-    boolean winner;
     
+    boolean check_player2= false;
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[b.index]);
@@ -136,7 +135,9 @@ public class TanksGLEventListener extends TanksListener {
 //    int x3 =0 , y3=0;
 int bulletX, bulletY, bulletX2, bulletY2;
 
-     public boolean home ,onePlayer, twoPlayer, easy, medium, hard;
+int lifes;
+
+     public boolean home, winner, gameOver, onePlayer, twoPlayer, easy, medium, hard;
 //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 
@@ -160,6 +161,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         medium = false;
         hard = false;
         winner = false;
+        gameOver = false;
     }
     
     private void initGame() {
@@ -170,6 +172,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         bulletX2 = bulletY2 = 0;
         bullets = new ArrayList<>();
         bullets2 = new ArrayList<>();
+        lifes = 3;
         
         map1.bricks.clear();
         map2.bricks.clear();
@@ -295,9 +298,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
 
         if (home) {
             DrawBackground(gl, 8);
-        } else if (onePlayer || twoPlayer){
+        } else if (onePlayer ){
             DrawBackground(gl, 9);
 
+        } else if (twoPlayer) {
+            DrawBackground(gl ,9);
+            check_player2= true;
         } else if ( easy || medium || hard ) {
             int level = 12;
             DrawBackground(gl, level);
@@ -316,12 +322,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (getEnemyDistance()<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
                 displayVar(g, gld);
-
 
             } else if (medium) {
                 currentMap = map2;
@@ -349,12 +355,16 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - EnemyXMid)*(x - EnemyXMid)+(y - 30)*(y - 30))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
+                    
                 }
                 if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
                 displayVar(g, gld);
+                
             } else if (hard) {
                 System.out.println("x: "+x);
                 System.out.println("y: "+y);
@@ -375,6 +385,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
 
 
@@ -411,6 +422,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - EnemyXHard)*(x - EnemyXHard)+(y - EnemyYHardIII)*(y - EnemyYHardIII))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
 
 
@@ -438,18 +450,19 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (Math.sqrt((x - 18)*(x - 18)+(y - EnemyYHard)*(y - EnemyYHard))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
                 if (Math.sqrt((x - 48)*(x - 48)+(y - EnemyYHardII)*(y - EnemyYHardII))<6){
                     x=0;
                     y=0;
+                    if (--lifes == 0) gameOver = true;
                 }
-                displayVar(g, gld);
 
 
             }
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
-            if (twoPlayer) {
+            if (check_player2) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             }
             for (Brick b : currentMap.bricks)
@@ -501,7 +514,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 }
             }
             //make shot if two player only
-            if (twoPlayer){
+            if (check_player2){
             for (Bullet bullet :bullets2) {
                 if (bullet.fired) {
 //                System.out.println(bullet.fired);
@@ -549,7 +562,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
         
         if (winner)
             DrawBackground(gl, 10);
+        
+        if (gameOver)
+            DrawBackground(gl, 11);
+        
     }
+
     private void displayVar(GLUT g, GLAutoDrawable gld) {
         GL gl2 = gld.getGL();
         gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
@@ -573,9 +591,6 @@ int bulletX, bulletY, bulletX2, bulletY2;
 
 
     }
-
-
-
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
@@ -762,28 +777,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         return new Point2D(p.x / (maxWidth / 2.0) - 0.9, p.y / (maxHeight / 2.0) - 0.9);
     }
     
-//    private boolean isBricksForTank1() {
-//        Point2D tank1Position = getPosition(new Point2D(x, y), false),
-//                bricksPosition = new Point2D();
-//        
-//        for (Point2D p1: bricksPositions) {
-//            bricksPosition = getPosition(p1, false);
-//            double distance = tank1Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        for (Point2D p2: whiteBricksPositions) {
-//            bricksPosition = getPosition(p2, false);
-//            double distance = tank1Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        return false;
-//    }
+
     
     private boolean isBricksForTank1() {
         Point2D tank1Position = getPosition(new Point2D(x, y), false),
@@ -815,29 +809,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         return false;
     }
     
-//    private boolean isBricksForTank2() {
-//        Point2D tank2Position = getPosition(new Point2D(x2, y2), true),
-//                bricksPosition = new Point2D();
-//        
-//        for (Point2D p1: bricksPositions) {
-//            bricksPosition = getPosition(p1, false);
-//            double distance = tank2Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        for (Point2D p2: whiteBricksPositions) {
-//            bricksPosition = getPosition(p2, false);
-//            double distance = tank2Position.getDistanceFrom(bricksPosition);
-//            
-//            if (distance < .195)
-//                return true;
-//        }
-//        
-//        return false;
-//    }
-    
+
    public void handleKeyPress () {
         if (home ==false && onePlayer == false ) {
             if (isKeyPressed(KeyEvent.VK_SPACE)) {
@@ -1050,9 +1022,12 @@ int bulletX, bulletY, bulletX2, bulletY2;
         xPosition = (int) ((x4 / width) * 60);
         yPosition = 60 - (int) ((y4 / height) * 60);
 
-        
+        System.out.println("x:"+xPosition + "y"+yPosition);
 
         if (home) {
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 47 && yPosition >= 40) {
                 System.out.println("Entering onePlayer block");
                 home = false;
@@ -1067,43 +1042,59 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 home = false;
                 twoPlayer = true;
             }
-        } else if (onePlayer) {
+        }
+        if (onePlayer) {
+            System.out.println("palyer1");
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
+            if (xPosition >=0 && xPosition<=7 && yPosition>=54 &&yPosition<=60 ){
+                homePage();
+            }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
-//                System.out.println("Entering easy block");
                 easy = true;
                 onePlayer =false;
 
-                // Draw the level selection screen for 'easy'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
-//                System.out.println("Entering medium block");
+
                 medium = true;
                 onePlayer = false;
-                // Draw the level selection screen for 'medium'
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
-//                System.out.println("Entering hard block");
                 hard = true;
                 onePlayer =false;
 
-                // Draw the level selection screen for 'hard'
             }
-        } else if (twoPlayer) {
+        }
+        if (twoPlayer) {
+            System.out.println("player2");
+            if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54){
+                System.exit(0);
+            }
+            if (xPosition >=0 && xPosition<=7 && yPosition>=54 &&yPosition<=60 ){
+                homePage();
+            }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
-//                System.out.println("Entering easy block");
                 easy = true;
+                twoPlayer =false;
 
-                // Draw the level selection screen for 'easy'
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
-//                System.out.println("Entering medium block");
                 medium = true;
+                twoPlayer=false;
+
 
                 // Draw the level selection screen for 'medium'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
 //                System.out.println("Entering hard block");
                 hard = true;
+                twoPlayer=false;
 
                 // Draw the level selection screen for 'hard'
             }
-        } else if (winner) {
+        }
+        
+        if (winner) {
             System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 10 && xPosition <= 32 && yPosition >= 16 && yPosition <= 25) {
                 winner = false;
@@ -1123,6 +1114,15 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 System.out.println("Home Page");
             }
             
+            initGame();
+        } else if (gameOver) {
+            System.out.println("x: " + xPosition + ", y: " + yPosition);
+            if (xPosition >= 23 && xPosition <= 28 && yPosition >= 16 && yPosition <= 18) {
+                lifes = 3;
+                gameOver = false;
+            } else if (xPosition >= 32 && xPosition <= 35 && yPosition >= 16 && yPosition <= 18) {
+                homePage();
+            }
             initGame();
         }
     }
