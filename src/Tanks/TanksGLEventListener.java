@@ -5,6 +5,7 @@ package Tanks;
 import Texture.TextureReader;
 import com.sun.opengl.util.Animator;
 
+import com.sun.opengl.util.GLUT;
 import components.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -27,9 +28,9 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardII=0;
     double EnemyYHardII2=1;
     double EnemyYHardIII=54;
-    boolean turned=false;
     double EnemyYHardIII2=0;
-
+    int score = 0;
+    GLUT g = new GLUT();
 
     double EnemyXMid=18;
     double EnemyXMid2=0.6;
@@ -40,6 +41,7 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardIIII2=1;
 
     boolean winner;
+
     
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
@@ -67,6 +69,8 @@ public class TanksGLEventListener extends TanksListener {
 
                 if (currentMap.bricks.get(i).canBeBroken) {
                     currentMap.bricks.remove(i);
+                    score+=10;
+
                     if(isWinner())
                         winner = true;
                 }
@@ -286,6 +290,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
+
         handleKeyPress();
 
         if (home) {
@@ -297,6 +302,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
             int level = 12;
             DrawBackground(gl, level);
             if (easy) {
+
                 currentMap = map1;
                 DrawTank(gl,EnemyX,EnemyY,animationIndex,1,EnemyDir);
                 EnemyX+=EnemyX2;
@@ -315,6 +321,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
+                displayVar(g, gld);
 
 
             } else if (medium) {
@@ -348,6 +355,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     x=0;
                     y=0;
                 }
+                displayVar(g, gld);
             } else if (hard) {
                 System.out.println("x: "+x);
                 System.out.println("y: "+y);
@@ -382,7 +390,6 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     EnemyDirHardIII=Directions.down;
                     EnemyXHard2=0;
                     EnemyYHardIII2=-1;
-                    turned=true;
                 }
                 if (EnemyYHardIII<49){
                     EnemyDirHardIII=Directions.left;
@@ -436,7 +443,7 @@ int bulletX, bulletY, bulletX2, bulletY2;
                     x=0;
                     y=0;
                 }
-
+                displayVar(g, gld);
 
             }
             animationIndex = animationIndex % 4;
@@ -541,6 +548,29 @@ int bulletX, bulletY, bulletX2, bulletY2;
         
         if (winner)
             DrawBackground(gl, 10);
+    }
+    private void displayVar(GLUT g, GLAutoDrawable gld) {
+        GL gl2 = gld.getGL();
+//        gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        gl2.glRasterPos2f(-.9f, .9f);
+        g.glutBitmapString(5, "Score ");
+        g.glutBitmapString(5, Integer.toString(score));
+//        gl2.glRasterPos2f(-.8f, .84f);
+//        g.glutBitmapString(5, "tank  ");
+
+//        g.glutBitmapString(5, Integer.toString(tank / 17));
+//        gl2.glRasterPos2f(-.8f, .77f);
+//        g.glutBitmapString(5, "Timer  ");
+
+//        g.glutBitmapString(5, Long.toString(counter));
+//        gl2.glRasterPos2f(-.8f, .7f);
+//        g.glutBitmapString(5, "lives  ");
+//
+//        g.glutBitmapString(5, Long.toString(lives));
+
+        gl2.glEnd();
+
+
     }
 
   
