@@ -32,6 +32,7 @@ public class TanksGLEventListener extends TanksListener {
     boolean turned=false;
     double EnemyYHardIII2=0;
     int score;
+    int score2;
     int counter;
     GLUT g = new GLUT();
 
@@ -98,7 +99,7 @@ public class TanksGLEventListener extends TanksListener {
                 
                 if (currentMap.bricks.get(i).canBeBroken) {
                     currentMap.bricks.remove(i);
-                    score+=10;
+                    score2+=10;
                     if(isWinner())
                         winner = true;
                 }
@@ -137,7 +138,7 @@ public class TanksGLEventListener extends TanksListener {
 //    int x3 =0 , y3=0;
 int bulletX, bulletY, bulletX2, bulletY2;
 
-int lifes;
+int lives, lives2;
 
      public boolean home, winner, gameOver, onePlayer, twoPlayer, easy, medium, hard;
 //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
@@ -174,8 +175,9 @@ int lifes;
         bulletX2 = bulletY2 = 0;
         bullets = new ArrayList<>();
         bullets2 = new ArrayList<>();
-        lifes = 3;
-        score = 0;
+        lives = 3;
+        lives2 = 3;
+        score = score2 = 0;
         counter = 0;
         newGame();
         
@@ -327,7 +329,7 @@ int lifes;
                 if (getEnemyDistance()<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
@@ -361,13 +363,13 @@ int lifes;
                 if (Math.sqrt((x - EnemyXMid)*(x - EnemyXMid)+(y - 30)*(y - 30))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                     
                 }
                 if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
                 displayVar(g, gld);
                 
@@ -391,7 +393,7 @@ int lifes;
                 if (Math.sqrt((x - 0)*(x - 0)+(y - EnemyYHardIIII)*(y - EnemyYHardIIII))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
 
 
@@ -428,7 +430,7 @@ int lifes;
                 if (Math.sqrt((x - EnemyXHard)*(x - EnemyXHard)+(y - EnemyYHardIII)*(y - EnemyYHardIII))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
 
 
@@ -457,12 +459,12 @@ int lifes;
                 if (Math.sqrt((x - 18)*(x - 18)+(y - EnemyYHard)*(y - EnemyYHard))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
                 if (Math.sqrt((x - 48)*(x - 48)+(y - EnemyYHardII)*(y - EnemyYHardII))<6){
                     x=0;
                     y=0;
-                    if (--lifes == 0) gameOver = true;
+                    if (--lives == 0) gameOver = true;
                 }
 
 
@@ -579,15 +581,22 @@ int lifes;
         GL gl2 = gld.getGL();
         gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         gl2.glRasterPos2f(-.92f, .9f);
-        g.glutBitmapString(5, "Score ");
+        g.glutBitmapString(5, "Player1 Score ");
         g.glutBitmapString(5, Integer.toString(score));
 
-
         gl2.glRasterPos2f(-.92f, .82f);
-        g.glutBitmapString(5, "Lifes  ");
-        g.glutBitmapString(5, Integer.toString(lifes));
+        g.glutBitmapString(5, "Player2 Score ");
+        g.glutBitmapString(5, Integer.toString(score2));
 
         gl2.glRasterPos2f(-.92f, .74f);
+        g.glutBitmapString(5, "Player1 Lives  ");
+        g.glutBitmapString(5, Integer.toString(lives));
+
+        gl2.glRasterPos2f(-.92f, .66f);
+        g.glutBitmapString(5, "Player2 Lives  ");
+        g.glutBitmapString(5, Integer.toString(lives2));
+        
+        gl2.glRasterPos2f(-.92f, .60f);
         g.glutBitmapString(5, "Timer  ");
         g.glutBitmapString(5, Long.toString(counter));
 
@@ -1139,7 +1148,7 @@ int lifes;
         } else if (gameOver) {
             System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 23 && xPosition <= 28 && yPosition >= 16 && yPosition <= 18) {
-                lifes = 3;
+                lives = 3;
                 gameOver = false;
             } else if (xPosition >= 32 && xPosition <= 35 && yPosition >= 16 && yPosition <= 18) {
                 homePage();
