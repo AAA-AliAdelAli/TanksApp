@@ -266,10 +266,11 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
 
             animationIndex = animationIndex % 4;
+            DrawTank(gl, x, y, animationIndex, 1, direction);
             if (twoPlayer) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             }
-            DrawTank(gl, x, y, animationIndex, 1, direction);
+
 
             for (Brick b : currentMap.bricks)
                 drawBrick(gl, b);
@@ -869,15 +870,18 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
 //                System.out.println("Entering easy block");
                 easy = true;
+                onePlayer =false;
 
                 // Draw the level selection screen for 'easy'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
 //                System.out.println("Entering medium block");
                 medium = true;
+                onePlayer = false;
                 // Draw the level selection screen for 'medium'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
 //                System.out.println("Entering hard block");
                 hard = true;
+                onePlayer =false;
 
                 // Draw the level selection screen for 'hard'
             }
