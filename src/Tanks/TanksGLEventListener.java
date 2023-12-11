@@ -139,15 +139,14 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             new Brick(new Point2D(36, 30), false),
             new Brick(new Point2D(42, 30), false),
             new Brick(new Point2D(30, 30), false),
-            new Brick(new Point2D(26, 30), false),
-            new Brick(new Point2D(26, 24), false),
-            new Brick(new Point2D(26, 18), false),
-            new Brick(new Point2D(14, 30), false),
-            new Brick(new Point2D(8, 30), false),
+            new Brick(new Point2D(24, 24), false),
+            new Brick(new Point2D(24, 18), false),
+            new Brick(new Point2D(12, 30), false),
+            new Brick(new Point2D(6, 30), false),
             new Brick(new Point2D(54, 30), true),
-            new Brick(new Point2D(20, 30), true),
-            new Brick(new Point2D(26, 12), true),
-            new Brick(new Point2D(26, 30), true)
+            new Brick(new Point2D(18, 30), true),
+            new Brick(new Point2D(24, 12), true),
+            new Brick(new Point2D(24, 30), true)
         ));
         // Level 2
         map2.bricks.addAll(Arrays.asList(
