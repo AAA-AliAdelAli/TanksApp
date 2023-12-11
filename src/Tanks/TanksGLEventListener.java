@@ -584,7 +584,7 @@ int lifes;
 
 
         gl2.glRasterPos2f(-.92f, .82f);
-        g.glutBitmapString(5, "Lifes  ");
+        g.glutBitmapString(5, "Lives  ");
         g.glutBitmapString(5, Integer.toString(lifes));
 
         gl2.glRasterPos2f(-.92f, .74f);
