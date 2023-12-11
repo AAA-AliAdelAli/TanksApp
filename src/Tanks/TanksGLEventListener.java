@@ -99,6 +99,8 @@ int bulletX = 0;
 int bulletY = 0;
     int bulletX2 = 0;
     int bulletY2 = 0;
+
+     public boolean home = true,player1 = false ,player2 = false ,easy = false ,medium = false,hard = false;
 //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 //    Point2D bricksPositions[] = {
@@ -124,7 +126,7 @@ int bulletY = 0;
 //    };
     
 // bull index 4
-    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "Back.jpg"};
+    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "home.jpg","level.jpg","Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -239,7 +241,7 @@ int bulletY = 0;
             new Brick( new Point2D(42, 0), false )
         ));
         
-        currentMap = map3; // current leve
+         // current leve
         
         whiteBricksPositions = currentMap.getWhiteBricksPositions();
         
@@ -266,13 +268,29 @@ int bulletY = 0;
     }
 
     public void display(GLAutoDrawable gld) {
+
+
+
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
-
-        DrawBackground(gl);
         handleKeyPress();
-        animationIndex = animationIndex % 4;
+//        System.out.println("State: Home=" + home + ", Player1=" + player1);
+
+        if (home) {
+            DrawBackground(gl, 8);
+        }
+        if (player1){
+            DrawBackground(gl, 9);
+
+        }
+
+        if (easy){
+            currentMap =map1;
+            DrawBackground(gl,10);
+
+
+            animationIndex = animationIndex % 4;
             DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             DrawTank(gl, x, y, animationIndex, 1, direction);
 //        for (Point2D p : bricksPositions)
@@ -281,8 +299,502 @@ int bulletY = 0;
 //        for (Point2D p : whiteBricksPositions)
 //            drawBrick(gl, p, true);
 
-        for (Brick b: currentMap.bricks)
-            drawBrick(gl, b);
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+        }
+        if (medium){
+            currentMap = map2;
+            DrawBackground(gl,10);
+
+
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+        }
+        if (hard){
+            currentMap = map3;
+            DrawBackground(gl,10);
+
+
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+
+
+        for (Point2D p : whiteBricksPositions)
+            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+                    bullx = x;
+                    bully = y;
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+        }
+
+
+
+        if (player2){
+
+            currentMap = map3;
+            DrawBackground(gl,10);
+
+
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+                    bullx = x;
+                    bully = y;
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+            animationIndex = animationIndex % 4;
+            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            DrawTank(gl, x, y, animationIndex, 1, direction);
+//        for (Point2D p : bricksPositions)
+//            drawBrick(gl, p, false);
+//
+//        for (Point2D p : whiteBricksPositions)
+//            drawBrick(gl, p, true);
+
+            for (Brick b : currentMap.bricks)
+                drawBrick(gl, b);
+
+
+//bullet
+
+            for (Bullet bullet : bullets) {
+                if (bullet.fired) {
+//                System.out.println(bullet.fired);
+                    switch (bullet.directions) {
+                        case up:
+                            bullet.y++;
+                            break;
+                        case up_right:
+                            bullet.x++;
+                            bullet.y++;
+                            break;
+                        case right:
+                            bullet.x++;
+                            break;
+                        case down_right:
+                            bullet.x++;
+                            bullet.y--;
+                            break;
+                        case down:
+                            bullet.y--;
+                            break;
+                        case down_left:
+                            bullet.x--;
+                            bullet.y--;
+                            break;
+                        case left:
+                            bullet.x--;
+                            break;
+                        case up_left:
+                            bullet.x--;
+                            bullet.y++;
+                            break;
+                    }
+
+
+                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+                    bullx = x;
+                    bully = y;
+                    bulletX = bullet.x;
+                    bulletY = bullet.y;
+                    boolean isPointInList = false;
+
+                    checkBullet(bullet);
+
+                }
+            }
+        }
         
         
 //bullet
@@ -653,9 +1165,9 @@ int bulletY = 0;
 //
 //        gl.glDisable(GL.GL_BLEND);
 //    }
-    public void DrawBackground(GL gl){
+    public void DrawBackground(GL gl ,int index){
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);    // Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, index);    // Turn Blending On
 
         gl.glPushMatrix();
         gl.glBegin(GL.GL_QUADS);
@@ -793,223 +1305,254 @@ int bulletY = 0;
 //        return false;
 //    }
     
-    public void handleKeyPress () {
-        if (isKeyPressed(KeyEvent.VK_SPACE)) {
-            //fire
-            if (bulletX == x && bulletY== y) {
-                bullets.add(new Bullet(direction, x, y));
-                System.out.println("bulletX1 :" + bulletX);
-                System.out.println("bulletY1 :" + bulletY);
-                System.out.println("X1 :" + x);
-                System.out.println("Y1 :" + y);
-                System.out.println(bullets.size());
-            }
-            else if ( (Math.abs(bulletX - x) >= 10) ||  (Math.abs(bulletY - y) >= 5)) {
-                bullets.add(new Bullet(direction, x, y));
-                System.out.println("bulletX2 :" + bulletX);
-                System.out.println("bulletY2 :" + bulletY);
-                System.out.println("X2 :" + x);
-                System.out.println("Y2 :" + y);
-                System.out.println(bullets.size());
-            }
-        } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
-            if (x > 0 && y > 0) {
-                x--;
-                y--;
-                if (getDistance() < 6 || isBricksForTank1()) {
-                    x++;
-                    y++;
+   public void handleKeyPress () {
+        if (home ==false && player1 == false ) {
+            if (isKeyPressed(KeyEvent.VK_SPACE)) {
+                //fire
+                if (bulletX == x && bulletY== y) {
+                    bullets.add(new Bullet(direction, x, y));
+                    System.out.println("bulletX1 :" + bulletX);
+                    System.out.println("bulletY1 :" + bulletY);
+                    System.out.println("X1 :" + x);
+                    System.out.println("Y1 :" + y);
+                    System.out.println(bullets.size());
+                }
+                else if ( (Math.abs(bulletX - x) >= 10) ||  (Math.abs(bulletY - y) >= 5)) {
+                    bullets.add(new Bullet(direction, x, y));
+                    System.out.println("bulletX2 :" + bulletX);
+                    System.out.println("bulletY2 :" + bulletY);
+                    System.out.println("X2 :" + x);
+                    System.out.println("Y2 :" + y);
+                    System.out.println(bullets.size());
                 }
             }
-            direction = Directions.down_left;
-        } else if (isKeyPressed(KeyEvent.VK_RIGHT) && isKeyPressed(KeyEvent.VK_DOWN)) {
-            // Handle down_right
-            if (x < maxWidth - 6 && y > 0) {
-                x++;
-                y--;
-                if (getDistance() < 6 || isBricksForTank1()) {
+            else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+                if (x > 0 && y > 0) {
                     x--;
-                    y++;
-                }
-            }
-            direction = Directions.down_right;
-        } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_LEFT)) {
-            // Handle up_left
-            if (y < maxHeight - 6 && x > 0) {
-                y++;
-                x--;
-                if (getDistance() < 6 || isBricksForTank1()) {
                     y--;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        x++;
+                        y++;
+                    }
+                }
+                direction = Directions.down_left;
+            } else if (isKeyPressed(KeyEvent.VK_RIGHT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+                // Handle down_right
+                if (x < maxWidth - 6 && y > 0) {
                     x++;
-                }
-            }
-            direction = Directions.up_left;
-        } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_RIGHT)) {
-            // Handle up_right
-            if (y < maxHeight - 6 && x < maxWidth - 6) {
-                y++;
-                x++;
-                if (getDistance() < 6 || isBricksForTank1()) {
                     y--;
-                    x--;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        x--;
+                        y++;
+                    }
                 }
-            }
-            direction = Directions.up_right;
-        } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
-            // Handle left
-            if (x > 0) {
-                x--;
-                if (getDistance() < 6 || isBricksForTank1()) {
-                    x++;
-                }
-            }
-            direction = Directions.left;
-        } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            // Handle right
-            if (x < maxWidth - 6) {
-                x++;
-                if (getDistance() < 6 || isBricksForTank1()) {
-                    x--;
-                }
-            }
-            direction = Directions.right;
-        } else if (isKeyPressed(KeyEvent.VK_UP)) {
-            // Handle up
-            if (y < maxHeight - 6) {
-                y++;
-                if (getDistance() < 6 || isBricksForTank1()) {
-                    y--;
-                }
-            }
-            direction = Directions.up;
-        } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
-            // Handle down
-            if (y > 0) {
-                y--;
-                if (getDistance() < 6 || isBricksForTank1()) {
+                direction = Directions.down_right;
+            } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_LEFT)) {
+                // Handle up_left
+                if (y < maxHeight - 6 && x > 0) {
                     y++;
+                    x--;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        y--;
+                        x++;
+                    }
                 }
-            }
-            direction = Directions.down;
-        }
-
-        //  player2
-        if (isKeyPressed(KeyEvent.VK_Q)) {
-            // fire
-            if (bulletX2 == x2 && bulletY2== y2) {
-            bullets2.add(new Bullet(direction2, x2, y2));
-                System.out.println("bulletX1 :" + bulletX);
-                System.out.println("bulletY1 :" + bulletY);
-                System.out.println("X1 :" + x);
-                System.out.println("Y1 :" + y);
-                System.out.println(bullets.size());
-            }
-            else if ( (Math.abs(bulletX2 - x2) >= 10) ||  (Math.abs(bulletY2 - y2) >= 5)) {
-            bullets2.add(new Bullet(direction2, x2, y2));
-                System.out.println("bulletX2 :" + bulletX);
-                System.out.println("bulletY2 :" + bulletY);
-                System.out.println("X2 :" + x);
-                System.out.println("Y2 :" + y);
-                System.out.println(bullets.size());
+                direction = Directions.up_left;
+            } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_RIGHT)) {
+                // Handle up_right
+                if (y < maxHeight - 6 && x < maxWidth - 6) {
+                    y++;
+                    x++;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        y--;
+                        x--;
+                    }
+                }
+                direction = Directions.up_right;
+            } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+                // Handle left
+                if (x > 0) {
+                    x--;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        x++;
+                    }
+                }
+                direction = Directions.left;
+            } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
+                // Handle right
+                if (x < maxWidth - 6) {
+                    x++;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        x--;
+                    }
+                }
+                direction = Directions.right;
+            } else if (isKeyPressed(KeyEvent.VK_UP)) {
+                // Handle up
+                if (y < maxHeight - 6) {
+                    y++;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        y--;
+                    }
+                }
+                direction = Directions.up;
+            } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
+                // Handle down
+                if (y > 0) {
+                    y--;
+                    if (getDistance() < 6 || isBricksForTank1()) {
+                        y++;
+                    }
+                }
+                direction = Directions.down;
             }
 
-        } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
-            if (x2 > -maxWidth + 6 && y2 < 0) {
-                x2--;
-                y2++;
-                if (getDistance() < 6 || isBricksForTank2()) {
-                    x2++;
-                    y2--;
+            //  player2
+            if (isKeyPressed(KeyEvent.VK_Q)) {
+                // fire
+                if (bulletX2 == x2 && bulletY2 == y2) {
+                    bullets2.add(new Bullet(direction2, x2, y2));
+                    System.out.println("bulletX1 :" + bulletX);
+                    System.out.println("bulletY1 :" + bulletY);
+                    System.out.println("X1 :" + x);
+                    System.out.println("Y1 :" + y);
+                    System.out.println(bullets.size());
+                } else if ((Math.abs(bulletX2 - x2) >= 10) || (Math.abs(bulletY2 - y2) >= 5)) {
+                    bullets2.add(new Bullet(direction2, x2, y2));
+                    System.out.println("bulletX2 :" + bulletX);
+                    System.out.println("bulletY2 :" + bulletY);
+                    System.out.println("X2 :" + x);
+                    System.out.println("Y2 :" + y);
+                    System.out.println(bullets.size());
                 }
-            }
-            direction2 = Directions.W_A;
-        } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_W)) {
-            if (x2 < 0 && y2 < 0) {
-                x2++;
-                y2++;
-                if (getDistance() < 6 || isBricksForTank2()) {
-                    x2--;
-                    y2--;
-                }
-            }
-            direction2 = Directions.W_D;
-        } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_S)) {
-            if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
-                x2--;
-                y2--;
-                if (getDistance() < 6 || isBricksForTank2()) {
-                    x2++;
-                    y2++;
-                }
-            }
-            direction2 = Directions.S_A;
-        } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_S)) {
-            if (x2 < 0 && y2 > -maxHeight + 6) {
-                x2++;
-                y2--;
-                if (getDistance() < 6 || isBricksForTank2()) {
+
+            } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
+                if (x2 > -maxWidth + 6 && y2 < 0) {
                     x2--;
                     y2++;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2++;
+                        y2--;
+                    }
                 }
-            }
-            direction2 = Directions.S_D;
-        } else if (isKeyPressed(KeyEvent.VK_A)) {
-            if (x2 > -maxWidth + 6) {
-                x2--;
-                if (getDistance() < 6 || isBricksForTank2()) {
+                direction2 = Directions.W_A;
+            } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_W)) {
+                if (x2 < 0 && y2 < 0) {
                     x2++;
-                }
-            }
-            direction2 = Directions.A;
-        } else if (isKeyPressed(KeyEvent.VK_D)) {
-            if (x2 < 0) {
-                x2++;
-                if (getDistance() < 6 || isBricksForTank2()) {
-                    x2--;
-                }
-            }
-            direction2 = Directions.D;
-        } else if (isKeyPressed(KeyEvent.VK_W)) {
-            if (y2 < 0) {
-                y2++;
-                if (getDistance() < 6 || isBricksForTank2()) {
-                    y2--;
-                }
-            }
-            direction2 = Directions.W;
-        } else if (isKeyPressed(KeyEvent.VK_S)) {
-            if (y2 > -maxHeight + 6) {
-                y2--;
-                if (getDistance() < 6 || isBricksForTank2()) {
                     y2++;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2--;
+                        y2--;
+                    }
                 }
+                direction2 = Directions.W_D;
+            } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_S)) {
+                if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
+                    x2--;
+                    y2--;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2++;
+                        y2++;
+                    }
+                }
+                direction2 = Directions.S_A;
+            } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_S)) {
+                if (x2 < 0 && y2 > -maxHeight + 6) {
+                    x2++;
+                    y2--;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2--;
+                        y2++;
+                    }
+                }
+                direction2 = Directions.S_D;
+            } else if (isKeyPressed(KeyEvent.VK_A)) {
+                if (x2 > -maxWidth + 6) {
+                    x2--;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2++;
+                    }
+                }
+                direction2 = Directions.A;
+            } else if (isKeyPressed(KeyEvent.VK_D)) {
+                if (x2 < 0) {
+                    x2++;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        x2--;
+                    }
+                }
+                direction2 = Directions.D;
+            } else if (isKeyPressed(KeyEvent.VK_W)) {
+                if (y2 < 0) {
+                    y2++;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        y2--;
+                    }
+                }
+                direction2 = Directions.W;
+            } else if (isKeyPressed(KeyEvent.VK_S)) {
+                if (y2 > -maxHeight + 6) {
+                    y2--;
+                    if (getDistance() < 6 || isBricksForTank2()) {
+                        y2++;
+                    }
+                }
+                direction2 = Directions.S;
             }
-            direction2 = Directions.S;
         }
 
     }
 
 
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         double x4 = e.getX();
         double y4 = e.getY();
 
-//        System.out.println(x + " " + y);
         Component c = e.getComponent();
         double width = c.getWidth();
         double height = c.getHeight();
-//        System.out.println(width + " " + height);
-//get percent of GLCanvas instead of
-//points and then converting it to our
-//'100' based coordinate system.
+
         xPosition = (int) ((x4 / width) * 60);
-        yPosition = ((int) ((y4 / height) * 60));
-        yPosition = 60 - yPosition;
-        System.out.println("x:" +xPosition + "---" +"y:" +yPosition);
+        yPosition = 60 - (int) ((y4 / height) * 60);
 
+        System.out.println("x"+xPosition + "y:" + yPosition);
 
+        if (home) {
+            if (xPosition <= 28 && xPosition >= 4 && yPosition <= 47 && yPosition >= 40) {
+                System.out.println("Entering Player1 block");
+                home = false;
+                player1 = true;
+            }
+
+            if ((xPosition >= 52 && xPosition <= 58) && (yPosition >= 54 && yPosition <= 59)) {
+                // Handle exit
+            }
+
+            if (xPosition <= 28 && xPosition >= 4 && yPosition <= 31 && yPosition >= 23) {
+                home = false;
+                player2 = true;
+            }
+        }
+
+        if (player1) {
+            if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
+//                System.out.println("Entering easy block");
+                easy = true;
+                player1 = false;
+                // Draw the level selection screen for 'easy'
+            } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
+//                System.out.println("Entering medium block");
+                medium = true;
+                player1 = false;
+                // Draw the level selection screen for 'medium'
+            } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
+//                System.out.println("Entering hard block");
+                hard = true;
+                player1 = false;
+                // Draw the level selection screen for 'hard'
+            }
+        }
     }
 
     @Override
