@@ -18,6 +18,9 @@ import javax.media.opengl.glu.GLU;
 
 public class TanksGLEventListener extends TanksListener {
     int animationIndex = 0;
+    int EnemyX=20;
+    int EnemyX2=1;
+    int EnemyY=40;
 
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
@@ -54,6 +57,7 @@ public class TanksGLEventListener extends TanksListener {
 
     Directions direction2 = Directions.S;
     Directions direction = Directions.up;
+    Directions EnemyDir = Directions.right;
     ArrayList<Bullet> bullets =new ArrayList<>();
     ArrayList<Bullet> bullets2 =new ArrayList<>();
     Map map1 = new Map();
@@ -236,9 +240,6 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
     }
 
     public void display(GLAutoDrawable gld) {
-
-
-
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
@@ -264,7 +265,20 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             DrawBackground(gl, level);
 
 
-
+            DrawTank(gl,EnemyX,EnemyY,animationIndex,1,EnemyDir);
+            EnemyX+=EnemyX2;
+            if (EnemyX>54){
+                EnemyDir=Directions.left;
+                EnemyX2=-1;
+            }
+            if (EnemyX<0){
+                EnemyDir=Directions.right;
+                EnemyX2=1;
+            }
+            if (getEnemyDistance()<6){
+                x=0;
+                y=0;
+            }
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
             if (twoPlayer) {
@@ -384,6 +398,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
+
 
     public void DrawTank(GL gl, int x, int y, int index, float scale, Directions dir){
         gl.glEnable(GL.GL_BLEND);
@@ -551,6 +566,9 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
     
     public double getDistance(){
         return  Math.sqrt((x - (x2+54))*(x - (x2+54))+(y - (y2+54))*(y - (y2+54)));
+    }
+    public double getEnemyDistance(){
+        return  Math.sqrt((x - EnemyX)*(x - EnemyX)+(y - EnemyY)*(y - EnemyY));
     }
     
     private Point2D getPosition(Point2D p, boolean fromUp) {
@@ -720,6 +738,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                 direction = Directions.right;
             } else if (isKeyPressed(KeyEvent.VK_UP)) {
                 // Handle up
+                System.out.println(getEnemyDistance());
                 if (y < maxHeight - 6) {
                     y++;
                     if (getDistance() < 6 || isBricksForTank1()) {
