@@ -58,6 +58,30 @@ public class TanksGLEventListener extends TanksListener {
             }
         }
     }
+    
+    private void checkBullet2(Bullet bullet) {
+        for (int i = 0; i < currentMap.bricks.size(); i++) {
+            
+            Point2D brickPos = getPosition(currentMap.bricks.get(i).position, false);
+            Point2D bulletPos = getPosition(new Point2D(bullet.x, bullet.y), true);
+            
+//            System.out.println("brick " + brickPos.x + ", " + brickPos.y);
+//            System.out.println("bullet " + bulletPos.x + ", " + bulletPos.y);
+            
+            if (bulletPos.x >= brickPos.x - .15 &&
+                    bulletPos.x <= brickPos.x + .15 &&
+                    bulletPos.y >= brickPos.y - .15 &&
+                    bulletPos.y <= brickPos.y + .15) {
+
+                bullet.x = -100;
+                bullet.y = -100;
+                
+                if (currentMap.bricks.get(i).canBeBroken) {
+                    currentMap.bricks.remove(i);
+                }
+            }
+        }
+    }
 
     public enum Directions {up, down, left, right, down_right, up_left, up_right, down_left, W, A, S, D, Q, W_A, W_D, S_A, S_D}
 
@@ -427,7 +451,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                     DrawTank2(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
                     bulletX2 = bullet.x;
                     bulletY2 = bullet.y;
-                    checkBullet(bullet);
+                    checkBullet2(bullet);
 
                   }
                }
