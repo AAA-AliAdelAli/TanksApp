@@ -34,7 +34,6 @@ public class TanksGLEventListener extends TanksListener {
     int score;
     int score2;
     int counter;
-    GLUT g = new GLUT();
 
 
     double EnemyXMid=18;
@@ -299,6 +298,7 @@ int lives, lives2;
 
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
+        GLUT g = new GLUT();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
         handleKeyPress();
@@ -334,8 +334,7 @@ int lives, lives2;
                 if (EnemyY==y){
                     bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
                 }
-
-                displayVar(g, gld);
+                
 
             } else if (medium) {
                 currentMap = map2;
@@ -371,7 +370,7 @@ int lives, lives2;
                     y=0;
                     if (--lives == 0) gameOver = true;
                 }
-                displayVar(g, gld);
+                
                 
             } else if (hard) {
                 System.out.println("x: "+x);
@@ -466,9 +465,9 @@ int lives, lives2;
                     y=0;
                     if (--lives == 0) gameOver = true;
                 }
-
-
+                
             }
+            
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
             if (check_player2) {
@@ -575,11 +574,14 @@ int lives, lives2;
         if (gameOver)
             DrawBackground(gl, 11);
         
+        displayVar(g, gld);
+        
     }
 
     private void displayVar(GLUT g, GLAutoDrawable gld) {
         GL gl2 = gld.getGL();
         gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        
         gl2.glRasterPos2f(-.92f, .9f);
         g.glutBitmapString(5, "Player1 Score ");
         g.glutBitmapString(5, Integer.toString(score));
