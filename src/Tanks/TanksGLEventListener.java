@@ -110,28 +110,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
      public boolean home = true,onePlayer = false ,twoPlayer = false ,easy = false ,medium = false,hard = false;
 //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
-//    Point2D bricksPositions[] = {
-//
-//        new Point2D(48, 30),
-//        new Point2D(36, 30),
-//        new Point2D(42, 30),
-//        new Point2D(30, 30),
-//        new Point2D(26, 30),
-//        new Point2D(26, 24),
-//        new Point2D(26, 18),
-//        new Point2D(14, 30),
-//        new Point2D(8, 30),
-//    };
-//
-//    Point2D whiteBricksPositions[] = {
-//        new Point2D(54, 30),
-//        new Point2D(20, 30),
-//        new Point2D(26, 12),
-//        new Point2D(26, 30),
-//
-//
-//    };
-    
+
 // bull index 4
     String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "home.jpg","level.jpg","Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
@@ -150,27 +129,6 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
 
-        // Convert arrays to ArrayLists
-//        bricksPositions.addAll(Arrays.asList(
-//                new Point2D(48, 30),
-//                new Point2D(36, 30),
-//                new Point2D(42, 30),
-//                new Point2D(30, 30),
-//                new Point2D(26, 30),
-//                new Point2D(26, 24),
-//                new Point2D(26, 18),
-//                new Point2D(14, 30),
-//                new Point2D(8, 30)
-//        ));
-
-//        whiteBricksPositions.addAll(Arrays.asList(
-//                new Point2D(54, 30),
-//                new Point2D(20, 30),
-//                new Point2D(26, 12),
-//                new Point2D(26, 30)
-//        ));
-
-        
         // Level 1
         map1.bricks.addAll(Arrays.asList(
             new Brick(new Point2D(48, 30), false),
@@ -599,7 +557,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
         gl.glDisable(GL.GL_BLEND);
     }
-    
+
     public void drawBrick(GL gl, Point2D p, boolean canBeCollapsed) {
         int index = canBeCollapsed ? 6 : 5;
         
