@@ -28,6 +28,8 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyXMid=18;
     double EnemyXMid2=0.6;
 
+    boolean winner;
+    
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[b.index]);
@@ -54,6 +56,8 @@ public class TanksGLEventListener extends TanksListener {
 
                 if (currentMap.bricks.get(i).canBeBroken) {
                     currentMap.bricks.remove(i);
+                    if(isWinner())
+                        winner = true;
                 }
             }
         }
@@ -78,9 +82,15 @@ public class TanksGLEventListener extends TanksListener {
                 
                 if (currentMap.bricks.get(i).canBeBroken) {
                     currentMap.bricks.remove(i);
+                    if(isWinner())
+                        winner = true;
                 }
             }
         }
+    }
+    
+    private boolean isWinner() {
+        return currentMap.getWhiteBricksPositions().size() == 0;
     }
 
     public enum Directions {up, down, left, right, down_right, up_left, up_right, down_left, W, A, S, D, Q, W_A, W_D, S_A, S_D}
@@ -92,8 +102,8 @@ public class TanksGLEventListener extends TanksListener {
     Directions EnemyDirMed2 = Directions.right;
     Directions EnemyDirHard = Directions.up;
 
-    ArrayList<Bullet> bullets =new ArrayList<>();
-    ArrayList<Bullet> bullets2 =new ArrayList<>();
+    ArrayList<Bullet> bullets;
+    ArrayList<Bullet> bullets2;
     Map map1 = new Map();
     Map map2 = new Map();
     Map map3 = new Map();
@@ -101,18 +111,20 @@ public class TanksGLEventListener extends TanksListener {
     Map currentMap = new Map();
 
     int maxWidth = 60 ,maxHeight = 60;
-    int xPosition = 0, yPosition = 0;
+    int xPosition, yPosition;
 
-    int x = 0, y =0 ,x2 = 0, y2 = 0;
+    int x, y ,x2, y2;
 //    int x3 =0 , y3=0;
-int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
+int bulletX, bulletY, bulletX2, bulletY2;
 
-     public boolean home = true,onePlayer = false ,twoPlayer = false ,easy = false ,medium = false,hard = false;
+     public boolean home ,onePlayer, twoPlayer, easy, medium, hard;
 //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 
 // bull index 4
-    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png", "bull.png", "bricks.png", "white_bricks.png", "home.jpg","level.jpg","Back.jpg"};
+    String textureNames[] = {"tankUp.png", "tankRight.png","tankLeft.png","tankDown.png",
+        "bull.png", "bricks.png", "white_bricks.png",
+        "home.jpg","level.jpg", "win.png", "gameover.png", "Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -120,15 +132,30 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
      5 means gun in array pos
      x and y coordinate for gun
      */
-    public void init(GLAutoDrawable gld) {
-
-        GL gl = gld.getGL();
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
-
-        gl.glEnable(GL.GL_TEXTURE_2D);  // Enable Texture Mapping
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glGenTextures(textureNames.length, textures, 0);
-
+    
+    private void homePage() {
+        home = true;
+        onePlayer = false;
+        twoPlayer = false;
+        easy = false;
+        medium = false;
+        hard = false;
+        winner = false;
+    }
+    
+    private void initGame() {
+        x = y = 0;
+        x2 = y2 = 0;
+        xPosition = yPosition = 0;
+        bulletX = bulletY = 0;
+        bulletX2 = bulletY2 = 0;
+        bullets = new ArrayList<>();
+        bullets2 = new ArrayList<>();
+        
+        map1.bricks.clear();
+        map2.bricks.clear();
+        map3.bricks.clear();
+        
         // Level 1
         map1.bricks.addAll(Arrays.asList(
             new Brick(new Point2D(48, 30), false),
@@ -177,16 +204,16 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             new Brick( new Point2D(12, 0), false ),
             
             new Brick( new Point2D(12, 24), false ),
-            new Brick( new Point2D(12, 30), false ),
+            new Brick( new Point2D(12, 30), true ),
             new Brick( new Point2D(12, 36), false ),
             new Brick( new Point2D(12, 42), false ),
             new Brick( new Point2D(12, 48), false ),
             new Brick( new Point2D(12, 54), true ),
             
             new Brick( new Point2D(18, 42), false ),
-            new Brick( new Point2D(24, 42), false ),
+            new Brick( new Point2D(24, 42), true ),
             new Brick( new Point2D(30, 42), false ),
-            new Brick( new Point2D(36, 42), false ),
+            new Brick( new Point2D(36, 42), true ),
             new Brick( new Point2D(42, 42), false ),
             
             new Brick( new Point2D(18, 24), false ),
@@ -196,7 +223,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             new Brick( new Point2D(42, 24), false ),
             
             new Brick( new Point2D(42, 42), false ),
-            new Brick( new Point2D(42, 36), false ),
+            new Brick( new Point2D(42, 36), true ),
             new Brick( new Point2D(42, 30), false ),
             new Brick( new Point2D(42, 24), false ),
             new Brick( new Point2D(42, 18), true ),
@@ -205,9 +232,19 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             new Brick( new Point2D(42, 0), false )
         ));
         
-         // current leve
+    }
+    
+    public void init(GLAutoDrawable gld) {
+
+        GL gl = gld.getGL();
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
+
+        gl.glEnable(GL.GL_TEXTURE_2D);  // Enable Texture Mapping
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glGenTextures(textureNames.length, textures, 0);
         
-        whiteBricksPositions = currentMap.getWhiteBricksPositions();
+        homePage();
+        initGame();
         
         for (int i = 0; i < textureNames.length; i++) {
             try {
@@ -239,13 +276,11 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
         if (home) {
             DrawBackground(gl, 8);
-        }
-        if (onePlayer || twoPlayer){
+        } else if (onePlayer || twoPlayer){
             DrawBackground(gl, 9);
 
-        }
-        if ( easy || medium || hard ) {
-            int level = 10;
+        } else if ( easy || medium || hard ) {
+            int level = 12;
             DrawBackground(gl, level);
             if (easy) {
                 currentMap = map1;
@@ -415,6 +450,9 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                }
             }
         }
+        
+        if (winner)
+            DrawBackground(gl, 10);
     }
 
   
@@ -892,7 +930,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
         xPosition = (int) ((x4 / width) * 60);
         yPosition = 60 - (int) ((y4 / height) * 60);
 
-//        System.out.println("x"+xPosition + "y:" + yPosition);
+        
 
         if (home) {
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 47 && yPosition >= 40) {
@@ -909,9 +947,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                 home = false;
                 twoPlayer = true;
             }
-        }
-
-        if (onePlayer) {
+        } else if (onePlayer) {
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
 //                System.out.println("Entering easy block");
                 easy = true;
@@ -930,9 +966,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
                 // Draw the level selection screen for 'hard'
             }
-        }
-
-        if (twoPlayer) {
+        } else if (twoPlayer) {
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
 //                System.out.println("Entering easy block");
                 easy = true;
@@ -949,6 +983,27 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
                 // Draw the level selection screen for 'hard'
             }
+        } else if (winner) {
+            System.out.println("x: " + xPosition + ", y: " + yPosition);
+            if (xPosition >= 10 && xPosition <= 32 && yPosition >= 16 && yPosition <= 25) {
+                winner = false;
+                if (easy) {
+                    easy = false;
+                    medium = true;
+                } else if (medium) {
+                    medium = false;
+                    hard = true;
+                } else if (hard) {
+                    homePage();
+                }
+                
+            
+            } else if (new Point2D(xPosition, yPosition).getDistanceFrom(new Point2D(46, 21)) <= 4) {
+                homePage();
+                System.out.println("Home Page");
+            }
+            
+            initGame();
         }
     }
 
