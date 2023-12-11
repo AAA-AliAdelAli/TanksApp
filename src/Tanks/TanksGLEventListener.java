@@ -21,6 +21,12 @@ public class TanksGLEventListener extends TanksListener {
     int EnemyX=20;
     int EnemyX2=1;
     int EnemyY=40;
+    int EnemyY2=1;
+    double EnemyYHard=0;
+    double EnemyYHard2=1;
+
+    double EnemyXMid=18;
+    double EnemyXMid2=0.6;
 
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
@@ -58,6 +64,10 @@ public class TanksGLEventListener extends TanksListener {
     Directions direction2 = Directions.S;
     Directions direction = Directions.up;
     Directions EnemyDir = Directions.right;
+    Directions EnemyDirMed = Directions.up;
+    Directions EnemyDirMed2 = Directions.right;
+    Directions EnemyDirHard = Directions.up;
+
     ArrayList<Bullet> bullets =new ArrayList<>();
     ArrayList<Bullet> bullets2 =new ArrayList<>();
     Map map1 = new Map();
@@ -254,44 +264,84 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
         }
         if ( easy || medium || hard ) {
             int level = 10;
+            DrawBackground(gl, level);
             if (easy) {
                 currentMap = map1;
+                DrawTank(gl,EnemyX,EnemyY,animationIndex,1,EnemyDir);
+                EnemyX+=EnemyX2;
+                if (EnemyX>54){
+                    EnemyDir=Directions.left;
+                    EnemyX2=-1;
+                }
+                if (EnemyX<0){
+                    EnemyDir=Directions.right;
+                    EnemyX2=1;
+                }
+                if (getEnemyDistance()<6){
+                    x=0;
+                    y=0;
+                }
+                if (EnemyY==y){
+                    bullets.add(new Bullet(EnemyDir,EnemyX,EnemyY));
+                }
+
+
             } else if (medium) {
                 currentMap = map2;
+//
+                DrawTank(gl,54,EnemyY,animationIndex,1,EnemyDirMed);
+                DrawTank(gl,EnemyXMid,30,animationIndex,1,EnemyDirMed2);
+                EnemyXMid+=EnemyXMid2;
+                EnemyY+=EnemyY2;
+                if (EnemyXMid>41){
+                    EnemyDirMed2=Directions.left;
+                    EnemyXMid2=-0.6;
+                }
+                if (EnemyXMid<12){
+                    EnemyDirMed2=Directions.right;
+                    EnemyXMid2=0.6;
+                }
+                if (EnemyY>54){
+                    EnemyDirMed=Directions.down;
+                    EnemyY2=-1;
+                }
+                if (EnemyY<0){
+                    EnemyDirMed=Directions.up;
+                    EnemyY2=1;
+                }
+                if (Math.sqrt((x - EnemyXMid)*(x - EnemyXMid)+(y - 30)*(y - 30))<6){
+                    x=0;
+                    y=0;
+                }
+                if (Math.sqrt((x - 54)*(x - 54)+(y - EnemyY)*(y - EnemyY))<6){
+                    x=0;
+                    y=0;
+                }
             } else if (hard) {
+                System.out.println(x);
                 currentMap = map3;
-            }
+                DrawTank(gl,18,EnemyYHard,animationIndex,1,EnemyDirHard);
+                EnemyYHard+=EnemyYHard2;
 
-            DrawBackground(gl, level);
+                if (EnemyYHard>18){
+                    EnemyDirHard=Directions.down;
+                    EnemyYHard2=-1;
+                }
+                if (EnemyYHard<0){
+                    EnemyDirHard=Directions.up;
+                    EnemyYHard2=1;
+                }
 
 
-            DrawTank(gl,EnemyX,EnemyY,animationIndex,1,EnemyDir);
-            EnemyX+=EnemyX2;
-            if (EnemyX>54){
-                EnemyDir=Directions.left;
-                EnemyX2=-1;
-            }
-            if (EnemyX<0){
-                EnemyDir=Directions.right;
-                EnemyX2=1;
-            }
-            if (getEnemyDistance()<6){
-                x=0;
-                y=0;
             }
             animationIndex = animationIndex % 4;
             DrawTank(gl, x, y, animationIndex, 1, direction);
             if (twoPlayer) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
             }
-
-
             for (Brick b : currentMap.bricks)
                 drawBrick(gl, b);
-
-
 //bullet
-
             for (Bullet bullet : bullets) {
                 if (bullet.fired) {
 //                System.out.println(bullet.fired);
@@ -304,7 +354,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                             bullet.y++;
                             break;
                         case right:
-                            bullet.x++;
+                            bullet.x+=2;
                             break;
                         case down_right:
                             bullet.x++;
@@ -318,7 +368,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                             bullet.y--;
                             break;
                         case left:
-                            bullet.x--;
+                            bullet.x-=2;
                             break;
                         case up_left:
                             bullet.x--;
@@ -377,20 +427,14 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                     DrawTank2(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
                     bulletX2 = bullet.x;
                     bulletY2 = bullet.y;
-
                     checkBullet(bullet);
 
-                }
+                  }
+               }
             }
-
-            }
-
         }
-
-
-
-
     }
+
   
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -400,7 +444,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
     }
 
 
-    public void DrawTank(GL gl, int x, int y, int index, float scale, Directions dir){
+    public void DrawTank(GL gl, double x, double y, int index, float scale, Directions dir){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
         int angle =0 ; //gl.glRotated(angle,0,0,1); for rotated the to correct dir
