@@ -248,7 +248,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
         if (home) {
             DrawBackground(gl, 8);
         }
-        if (onePlayer){
+        if (onePlayer || twoPlayer){
             DrawBackground(gl, 9);
 
         }
@@ -267,7 +267,9 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
 
             animationIndex = animationIndex % 4;
-            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            if (twoPlayer) {
+                DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+            }
             DrawTank(gl, x, y, animationIndex, 1, direction);
 
             for (Brick b : currentMap.bricks)
@@ -321,6 +323,8 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
                 }
             }
+            //make shot if two player only
+            if (twoPlayer){
             for (Bullet bullet :bullets2) {
                 if (bullet.fired) {
 //                System.out.println(bullet.fired);
@@ -356,13 +360,14 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
                     }
 
 
-                    DrawTank2(gl, bullet.x , bullet.y+1, textures[3], 0.3f, bullet.directions);
-                    bulletX2 = bullet.x ;
+                    DrawTank2(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
+                    bulletX2 = bullet.x;
                     bulletY2 = bullet.y;
 
                     checkBullet(bullet);
 
                 }
+            }
 
             }
 
@@ -370,112 +375,7 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
 
 
 
-        if (twoPlayer){
 
-            currentMap = map3;
-            DrawBackground(gl,10);
-
-
-            animationIndex = animationIndex % 4;
-            DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
-            DrawTank(gl, x, y, animationIndex, 1, direction);
-
-            for (Brick b : currentMap.bricks)
-                drawBrick(gl, b);
-
-
-
-            for (Bullet bullet : bullets) {
-                if (bullet.fired) {
-//                System.out.println(bullet.fired);
-                    switch (bullet.directions) {
-                        case up:
-                            bullet.y++;
-                            break;
-                        case up_right:
-                            bullet.x++;
-                            bullet.y++;
-                            break;
-                        case right:
-                            bullet.x++;
-                            break;
-                        case down_right:
-                            bullet.x++;
-                            bullet.y--;
-                            break;
-                        case down:
-                            bullet.y--;
-                            break;
-                        case down_left:
-                            bullet.x--;
-                            bullet.y--;
-                            break;
-                        case left:
-                            bullet.x--;
-                            break;
-                        case up_left:
-                            bullet.x--;
-                            bullet.y++;
-                            break;
-                    }
-
-
-                    DrawTank(gl, bullet.x, bullet.y + 1, textures[3], 0.3f, bullet.directions);
-
-                    bulletX = bullet.x;
-                    bulletY = bullet.y;
-                    boolean isPointInList = false;
-
-                    checkBullet(bullet);
-
-                }
-            }
-            for (Bullet bullet :bullets2) {
-                if (bullet.fired) {
-//                System.out.println(bullet.fired);
-                    switch (bullet.directions) {
-                        case W:
-                            bullet.y++;
-                            break;
-                        case W_D:
-                            bullet.x++;
-                            bullet.y++;
-                            break;
-                        case D:
-                            bullet.x++;
-                            break;
-                        case S_D:
-                            bullet.x++;
-                            bullet.y--;
-                            break;
-                        case S:
-                            bullet.y--;
-                            break;
-                        case S_A:
-                            bullet.x--;
-                            bullet.y--;
-                            break;
-                        case A:
-                            bullet.x--;
-                            break;
-                        case W_A:
-                            bullet.x--;
-                            bullet.y++;
-                            break;
-                    }
-
-
-                    DrawTank2(gl, bullet.x , bullet.y+1, textures[3], 0.3f, bullet.directions);
-                    bulletX2 = bullet.x ;
-                    bulletY2 = bullet.y;
-
-                    checkBullet(bullet);
-
-                }
-
-            }
-
-        }
 
 
 
@@ -974,17 +874,35 @@ int bulletX = 0, bulletY = 0,bulletX2 = 0, bulletY2 = 0;
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
 //                System.out.println("Entering easy block");
                 easy = true;
-                onePlayer = false;
+
                 // Draw the level selection screen for 'easy'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
 //                System.out.println("Entering medium block");
                 medium = true;
-                onePlayer = false;
                 // Draw the level selection screen for 'medium'
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
 //                System.out.println("Entering hard block");
                 hard = true;
-                onePlayer = false;
+
+                // Draw the level selection screen for 'hard'
+            }
+        }
+
+        if (twoPlayer) {
+            if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
+//                System.out.println("Entering easy block");
+                easy = true;
+
+                // Draw the level selection screen for 'easy'
+            } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
+//                System.out.println("Entering medium block");
+                medium = true;
+
+                // Draw the level selection screen for 'medium'
+            } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
+//                System.out.println("Entering hard block");
+                hard = true;
+
                 // Draw the level selection screen for 'hard'
             }
         }
