@@ -31,8 +31,8 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardIII=54;
     boolean turned=false;
     double EnemyYHardIII2=0;
-    int score=0;
-    int counter=0;
+    int score;
+    int counter;
     GLUT g = new GLUT();
 
 
@@ -175,6 +175,9 @@ int lifes;
         bullets = new ArrayList<>();
         bullets2 = new ArrayList<>();
         lifes = 3;
+        score = 0;
+        counter = 0;
+        newGame();
         
         map1.bricks.clear();
         map2.bricks.clear();
@@ -259,7 +262,7 @@ int lifes;
     }
     
     public void init(GLAutoDrawable gld) {
-        newGame();
+        
         GL gl = gld.getGL();
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
 
@@ -581,8 +584,8 @@ int lifes;
 
 
         gl2.glRasterPos2f(-.92f, .82f);
-        g.glutBitmapString(3, "Lifes  ");
-        g.glutBitmapString(3, Integer.toString(lifes));
+        g.glutBitmapString(5, "Lifes  ");
+        g.glutBitmapString(5, Integer.toString(lifes));
 
         gl2.glRasterPos2f(-.92f, .74f);
         g.glutBitmapString(5, "Timer  ");
