@@ -680,11 +680,17 @@ public class TanksGLEventListener extends TanksListener {
 
         if ((winner || gameOver) && check_player2) {
             if (score > score2)
-                JOptionPane.showMessageDialog(null, namePlayer1 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, namePlayer1 + " wins with score = " + score + "\n"
+                        + namePlayer2 + " loses with score = " + score2,
+                        "The winner",JOptionPane.INFORMATION_MESSAGE);
             else if (score2 > score)
-                JOptionPane.showMessageDialog(null, namePlayer2 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, namePlayer2 + " wins with score = " + score2 + "\n"
+                        + namePlayer1 + " loses with score = " + score,
+                        "The winner", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(null, "Draw", "Draw", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, namePlayer1 + " has score = " + score +
+                        "\n" + namePlayer2 + " has score = " + score2,
+                         "Draw", JOptionPane.INFORMATION_MESSAGE);
 
             initGame();
             homePage();
