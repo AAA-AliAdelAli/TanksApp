@@ -53,6 +53,7 @@ public class TanksGLEventListener extends TanksListener {
     boolean sound = false, sound1 = false;
     boolean onOff = false;
 
+
     boolean check_player2 = false;
     private Thread audioThread;
     String namePlayer1="player1";
@@ -154,14 +155,14 @@ public class TanksGLEventListener extends TanksListener {
 
     int lives, lives2;
 
-    public boolean home, winner, gameOver, onePlayer, twoPlayer, easy, medium, hard;
+    public boolean home, winner, gameOver, onePlayer, twoPlayer, easy, medium, hard ,how;
     //    ArrayList<Point2D> bricksPositions = new ArrayList<>();
     ArrayList<Point2D> whiteBricksPositions = new ArrayList<>();
 
     // bull index 4
     String textureNames[] = {"tankUp.png", "tankUp2.png", "tankLeft.png", "tankDown.png",
             "bull.png", "bricks.png", "white_bricks.png",
-            "home.jpg", "level.jpg", "win.png", "gameover.png", "Back.jpg"};
+            "home.jpg", "level.jpg", "win.png", "gameover.png","how.png" ,"Back.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -178,6 +179,7 @@ public class TanksGLEventListener extends TanksListener {
         hard = false;
         winner = false;
         gameOver = false;
+        how=false;
     }
 
     private void initGame() {
@@ -330,23 +332,24 @@ public class TanksGLEventListener extends TanksListener {
         handleKeyPress();
         if (onOff) {
             bullSound();
-            System.out.println("star");
-
             onOff = false;
 
         }
         if (home) {
             DrawBackground(gl, 8);
-        } else if (onePlayer) {
+        }if (how){
+            DrawBackground(gl, 12);
+        }
+        else if (onePlayer) {
             DrawBackground(gl, 9);
 
         } else if (twoPlayer) {
             DrawBackground(gl, 9);
             check_player2 = true;
         } else if (easy || medium || hard) {
+            how =false;
 
-
-            int level = 12;
+            int level = 13;
             DrawBackground(gl, level);
             if (easy) {
 
@@ -369,17 +372,20 @@ public class TanksGLEventListener extends TanksListener {
                         gameOver = true;
                     }
                 }
-                if (EnemyY == y) {
-                    bullets.add(new Bullet(EnemyDir, EnemyX, EnemyY));
+                if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
+                    x2 = 0;
+                    y2 = 0;
+                    if (--lives2 == 0) {
+                        gameOver = true;
+                    }
                 }
-
-                displayVar(g, gld);
+//                displayVar(g, gld);
 
             } else if (medium) {
                 currentMap = map2;
-//
-                DrawTank(gl, 54, EnemyY, animationIndex, 1, EnemyDirMed);
-                DrawTank(gl, EnemyXMid, 30, animationIndex, 1, EnemyDirMed2);
+                System.out.println("x:"+x);
+                DrawTank(gl, 42, EnemyY, 1, 1, EnemyDirMed);
+                DrawTank(gl, EnemyXMid, 30, 1, 1, EnemyDirMed2);
                 EnemyXMid += EnemyXMid2;
                 EnemyY += EnemyY2;
                 if (EnemyXMid > 41) {
@@ -406,7 +412,8 @@ public class TanksGLEventListener extends TanksListener {
                     }
 
                 }
-                if (Math.sqrt((x - 54) * (x - 54) + (y - EnemyY) * (y - EnemyY)) < 6) {
+                //col
+                if (Math.sqrt((x - 42) * (x - 42) + (y - EnemyY) * (y - EnemyY)) < 6) {
                     x = 0;
                     y = 0;
                     if (--lives == 0) {
@@ -422,7 +429,8 @@ public class TanksGLEventListener extends TanksListener {
                     }
 
                 }
-                if (Math.sqrt(((x2 + 54) - 54) * ((x2 + 54) - 54) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
+                //col
+                if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
                     x2 = 0;
                     y2 = 0;
                     if (--lives2 == 0) {
@@ -430,8 +438,7 @@ public class TanksGLEventListener extends TanksListener {
                     }
                 }
             } else if (hard) {
-//                System.out.println("x: "+x);
-//                System.out.println("y: "+y);
+
                 currentMap = map3;
                 DrawTank(gl, 18, EnemyYHard, 1, 1, EnemyDirHard);
                 DrawTank(gl, 48, EnemyYHardII, 1, 1, EnemyDirHardII);
@@ -552,7 +559,7 @@ public class TanksGLEventListener extends TanksListener {
                     }
                 }
 
-                displayVar(g, gld);
+//                displayVar(g, gld);
             }
 
             animationIndex = animationIndex % 4;
@@ -560,8 +567,6 @@ public class TanksGLEventListener extends TanksListener {
             if (check_player2) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
 
-            }else {
-                DrawTank2(gl, x2+200, y2+200, animationIndex, 1, direction2);
             }
             for (Brick b : currentMap.bricks) {
                 drawBrick(gl, b);
@@ -658,11 +663,15 @@ public class TanksGLEventListener extends TanksListener {
         }
 
         if (winner) {
+
             DrawBackground(gl, 10);
+
+
         }
 
         if (gameOver) {
             DrawBackground(gl, 11);
+
         }
 
         displayVar(g, gld);
@@ -670,45 +679,45 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     private void displayVar(GLUT g, GLAutoDrawable gld) {
-        GL gl2 = gld.getGL();
-        gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-        gl2.glRasterPos2f(-.92f, .9f);
-        g.glutBitmapString(5, namePlayer1+" Score "  );
-        g.glutBitmapString(5, Integer.toString(score));
 
-        gl2.glRasterPos2f(-.92f, .74f);
-        g.glutBitmapString(5, namePlayer1+" Lives");
-        g.glutBitmapString(5, Integer.toString(lives));
+        if (easy || medium ||hard) {
+            GL gl2 = gld.getGL();
+            gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-        gl2.glRasterPos2f(-.92f, .60f);
-        g.glutBitmapString(5, " Timer ");
-        g.glutBitmapString(5, Long.toString(counter));
+            gl2.glRasterPos2f(-.92f, .9f);
+            g.glutBitmapString(5, namePlayer1 + " Score ");
+            g.glutBitmapString(5, Integer.toString(score));
 
-        if (check_player2) {
-            gl2.glRasterPos2f(-.92f, .82f);
-            g.glutBitmapString(5, namePlayer2+" Score ");
-            g.glutBitmapString(5, Integer.toString(score2));
+            gl2.glRasterPos2f(-.92f, .74f);
+            g.glutBitmapString(5, namePlayer1 + " Lives");
+            g.glutBitmapString(5, Integer.toString(lives));
 
-            gl2.glRasterPos2f(-.92f, .66f);
-            g.glutBitmapString(5, namePlayer2+" Lives ");
-            g.glutBitmapString(5, Integer.toString(lives2));
+            gl2.glRasterPos2f(-.92f, .60f);
+            g.glutBitmapString(5, " Timer ");
+            g.glutBitmapString(5, Long.toString(counter));
+
+            if (check_player2) {
+                gl2.glRasterPos2f(-.92f, .82f);
+                g.glutBitmapString(5, namePlayer2 + " Score ");
+                g.glutBitmapString(5, Integer.toString(score2));
+
+                gl2.glRasterPos2f(-.92f, .66f);
+                g.glutBitmapString(5, namePlayer2 + " Lives ");
+                g.glutBitmapString(5, Integer.toString(lives2));
+            }
+
+
+            gl2.glEnd();
         }
-
-//        gl2.glRasterPos2f(-.8f, .7f);
-//        g.glutBitmapString(5, "lives  ");
-//
-//        g.glutBitmapString(5, Long.toString(lives));
-        gl2.glEnd();
-
     }
 
     public void newGame() {
-        //start counter in text field
+
         javax.swing.Timer timer = new Timer(900, e -> {
             //start counter in text field
             counter++;
-//            System.out.println(counter);
+
 
         });
         timer.start();
@@ -806,31 +815,7 @@ public class TanksGLEventListener extends TanksListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
-//    public void Drawenmay(GL gl,int x, int y, int index, float scale ,Directions dir){
-//        gl.glEnable(GL.GL_BLEND);
-//        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
-//
-//
-//        gl.glPushMatrix();
-//        gl.glTranslated(x3 / (maxWidth / 2.0) + 0.9, y3 / (maxHeight / 2.0) + 0.9, 0);
-//        gl.glScaled(0.1*scale, 0.1*scale, 1);
-////        gl.glRotated(angle,0,0,1);
-//        //System.out.println(x +" " + y);
-//        gl.glBegin(GL.GL_QUADS);
-//        // Front Face
-//        gl.glTexCoord2f(0.0f, 0.0f);
-//        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-//        gl.glTexCoord2f(1.0f, 0.0f);
-//        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-//        gl.glTexCoord2f(1.0f, 1.0f);
-//        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-//        gl.glTexCoord2f(0.0f, 1.0f);
-//        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-//        gl.glEnd();
-//        gl.glPopMatrix();
-//
-//        gl.glDisable(GL.GL_BLEND);
-//    }
+
 
     public void DrawBackground(GL gl, int index) {
         gl.glEnable(GL.GL_BLEND);
@@ -942,18 +927,9 @@ public class TanksGLEventListener extends TanksListener {
                 System.out.println("here22");
                 if (bulletX == x && bulletY == y) {
                     bullets.add(new Bullet(direction, x, y));
-//                    System.out.println("bulletX1 :" + bulletX);
-//                    System.out.println("bulletY1 :" + bulletY);
-//                    System.out.println("X1 :" + x);
-//                    System.out.println("Y1 :" + y);
-//                    System.out.println(bullets.size());
                 } else if ((Math.abs(bulletX - x) >= 10) || (Math.abs(bulletY - y) >= 5)) {
                     bullets.add(new Bullet(direction, x, y));
-//                    System.out.println("bulletX :" + bulletX);
-//                    System.out.println("bulletY:" + bulletY);
-//                    System.out.println("X :" + x);
-//                    System.out.println("Y :" + y);
-//                    System.out.println(bullets.size());
+
                 }
             } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
                 if (x > 0 && y > 0) {
@@ -1044,18 +1020,10 @@ public class TanksGLEventListener extends TanksListener {
                 // fire
                 if (bulletX2 == x2 && bulletY2 == y2) {
                     bullets2.add(new Bullet(direction2, x2, y2));
-//                    System.out.println("bulletX1 :" + bulletX2);
-//                    System.out.println("bulletY1 :" + bulletY2);
-//                    System.out.println("X1 :" + x2);
-//                    System.out.println("Y1 :" + y2);
-//                    System.out.println(bullets.size());
+
                 } else if ((Math.abs(bulletX2 - x2) >= 10) || (Math.abs(bulletY2 - y2) >= 5)) {
                     bullets2.add(new Bullet(direction2, x2, y2));
-//                    System.out.println("bulletX2 :" + bulletX);
-//                    System.out.println("bulletY2 :" + bulletY);
-//                    System.out.println("X2 :" + x);
-//                    System.out.println("Y2 :" + y);
-//                    System.out.println(bullets.size());
+;
                 }
 
             } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
@@ -1170,13 +1138,13 @@ public class TanksGLEventListener extends TanksListener {
         xPosition = (int) ((x4 / width) * 60);
         yPosition = 60 - (int) ((y4 / height) * 60);
 
-        System.out.println("x:" + xPosition + "y" + yPosition);
+        System.out.println("x:" + xPosition + "y:" + yPosition);
 
         if (home) {
             if (xPosition <= 58 && xPosition >= 52 && yPosition <= 8 && yPosition >= 2) {
                 sound = !sound;
                 onOrOffSound();
-                home = true;
+//                home = true;
 
                 //return of how
             }
@@ -1184,25 +1152,41 @@ public class TanksGLEventListener extends TanksListener {
                 System.exit(0);
             }
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 47 && yPosition >= 40) {
-                System.out.println("Entering onePlayer block");
+                how = false;
                 home = false;
                 onePlayer = true;
                 namePlayer1 = JOptionPane.showInputDialog(null, "name:");
             }
 
-            if ((xPosition >= 52 && xPosition <= 58) && (yPosition >= 54 && yPosition <= 59)) {
-                // Handle exit
+            if ((xPosition >= 4 && xPosition <= 29) && (yPosition >= 6 && yPosition <= 15)) {
+                home =false;
+                how =true;
+
+
             }
 
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 31 && yPosition >= 23) {
+                how =false;
                 home = false;
                 twoPlayer = true;
                 namePlayer1 = JOptionPane.showInputDialog(null, "name player1:");
                 namePlayer2 = JOptionPane.showInputDialog(null, "name player2:");
             }
         }
+        if (how){
+            if (xPosition >= 0 && xPosition <= 7 && yPosition >= 54 && yPosition <= 60) {
+                homePage();
+            }
+
+
+        }
         if (onePlayer) {
             System.out.println("palyer1");
+            if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
+                sound = !sound;
+                onOrOffSound();
+
+            }
             if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54) {
                 System.exit(0);
             }
@@ -1230,6 +1214,12 @@ public class TanksGLEventListener extends TanksListener {
         }
         if (twoPlayer) {
             System.out.println("player2");
+
+            if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
+                sound = !sound;
+                onOrOffSound();
+
+            }
             if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54) {
                 System.exit(0);
             }
@@ -1239,18 +1229,17 @@ public class TanksGLEventListener extends TanksListener {
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
                 easy = true;
                 twoPlayer = false;
-
+                newGame();
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
                 medium = true;
                 twoPlayer = false;
-
-                // Draw the level selection screen for 'medium'
+                newGame();
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
-//                System.out.println("Entering hard block");
+
                 hard = true;
                 twoPlayer = false;
+                newGame();
 
-                // Draw the level selection screen for 'hard'
             }
         }
 
