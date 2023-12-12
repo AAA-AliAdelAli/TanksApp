@@ -661,15 +661,22 @@ public class TanksGLEventListener extends TanksListener {
                 }
             }
         }
-
-        if (winner) {
-
+        
+//        System.out.println(check_player2);
+        
+        if ((winner || gameOver) && check_player2) {
+            if (score > score2)
+                JOptionPane.showMessageDialog(null, namePlayer1 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
+            else if (score2 > score)
+                JOptionPane.showMessageDialog(null, namePlayer2 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(null, "Draw", "Draw", JOptionPane.INFORMATION_MESSAGE);
+            
+            initGame();
+            homePage();
+        } else if (winner) {
             DrawBackground(gl, 10);
-
-
-        }
-
-        if (gameOver) {
+        } else if (gameOver) {
             DrawBackground(gl, 11);
 
         }
@@ -1172,6 +1179,9 @@ public class TanksGLEventListener extends TanksListener {
                 namePlayer1 = JOptionPane.showInputDialog(null, "name player1:");
                 namePlayer2 = JOptionPane.showInputDialog(null, "name player2:");
             }
+            
+            namePlayer1 = (namePlayer1 == null) ? "Player1" : namePlayer1;
+            namePlayer2 = (namePlayer2 == null) ? "Player2" : namePlayer2;
         }
         if (how){
             if (xPosition >= 0 && xPosition <= 7 && yPosition >= 54 && yPosition <= 60) {
