@@ -181,6 +181,7 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     private void initGame() {
+
         x = y = 0;
         x2 = y2 = 0;
         xPosition = yPosition = 0;
@@ -189,10 +190,10 @@ public class TanksGLEventListener extends TanksListener {
         bullets = new ArrayList<>();
         bullets2 = new ArrayList<>();
         lives = 3;
-        lives2 = 5;
+        lives2 = 3;
         score = score2 = 0;
         counter = 0;
-        newGame();
+//        newGame();
 
         map1.bricks.clear();
         map2.bricks.clear();
@@ -344,9 +345,11 @@ public class TanksGLEventListener extends TanksListener {
             check_player2 = true;
         } else if (easy || medium || hard) {
 
+
             int level = 12;
             DrawBackground(gl, level);
             if (easy) {
+
                 System.out.println("x2: " + x2);
                 currentMap = map1;
                 DrawTank(gl, EnemyX, EnemyY, 1, 1, EnemyDir);
@@ -556,6 +559,9 @@ public class TanksGLEventListener extends TanksListener {
             DrawTank(gl, x, y, animationIndex, 1, direction);
             if (check_player2) {
                 DrawTank2(gl, x2, y2, animationIndex, 1, direction2);
+
+            }else {
+                DrawTank2(gl, x2+200, y2+200, animationIndex, 1, direction2);
             }
             for (Brick b : currentMap.bricks) {
                 drawBrick(gl, b);
@@ -672,11 +678,11 @@ public class TanksGLEventListener extends TanksListener {
         g.glutBitmapString(5, Integer.toString(score));
 
         gl2.glRasterPos2f(-.92f, .74f);
-        g.glutBitmapString(5, namePlayer1+"Lives  ");
+        g.glutBitmapString(5, namePlayer1+" Lives");
         g.glutBitmapString(5, Integer.toString(lives));
 
         gl2.glRasterPos2f(-.92f, .60f);
-        g.glutBitmapString(5, "Timer  ");
+        g.glutBitmapString(5, " Timer ");
         g.glutBitmapString(5, Long.toString(counter));
 
         if (check_player2) {
@@ -685,7 +691,7 @@ public class TanksGLEventListener extends TanksListener {
             g.glutBitmapString(5, Integer.toString(score2));
 
             gl2.glRasterPos2f(-.92f, .66f);
-            g.glutBitmapString(5, namePlayer2+" Lives  ");
+            g.glutBitmapString(5, namePlayer2+" Lives ");
             g.glutBitmapString(5, Integer.toString(lives2));
         }
 
@@ -1206,17 +1212,19 @@ public class TanksGLEventListener extends TanksListener {
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
                 easy = true;
                 onePlayer = false;
+                newGame();
 
 
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
 
                 medium = true;
                 onePlayer = false;
-
+                newGame();
 
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
                 hard = true;
                 onePlayer = false;
+                newGame();
 
             }
         }
