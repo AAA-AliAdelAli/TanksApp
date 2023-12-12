@@ -199,6 +199,9 @@ public class TanksGLEventListener extends TanksListener {
         score = score2 = 0;
         counter = 0;
         pause = false;
+
+         direction2 = Directions.S;
+         direction = Directions.up;
 //        newGame();
 
         map1.bricks.clear();
@@ -357,7 +360,7 @@ public class TanksGLEventListener extends TanksListener {
             DrawBackground(gl, level);
             if (easy) {
 
-                System.out.println("x2: " + x2);
+//                System.out.println("x2: " + x2);
                 currentMap = map1;
                 DrawTank(gl, EnemyX, EnemyY, 1, 1, EnemyDir);
                 if (!pause) {
@@ -681,16 +684,16 @@ public class TanksGLEventListener extends TanksListener {
         if ((winner || gameOver) && check_player2) {
             if (score > score2)
                 JOptionPane.showMessageDialog(null, namePlayer1 + " wins with score = " + score + "\n"
-                        + namePlayer2 + " loses with score = " + score2,
+                                + namePlayer2 + " loses with score = " + score2,
                         "The winner",JOptionPane.INFORMATION_MESSAGE);
             else if (score2 > score)
                 JOptionPane.showMessageDialog(null, namePlayer2 + " wins with score = " + score2 + "\n"
-                        + namePlayer1 + " loses with score = " + score,
+                                + namePlayer1 + " loses with score = " + score,
                         "The winner", JOptionPane.INFORMATION_MESSAGE);
             else
                 JOptionPane.showMessageDialog(null, namePlayer1 + " has score = " + score +
-                        "\n" + namePlayer2 + " has score = " + score2,
-                         "Draw", JOptionPane.INFORMATION_MESSAGE);
+                                "\n" + namePlayer2 + " has score = " + score2,
+                        "Draw", JOptionPane.INFORMATION_MESSAGE);
 
             initGame();
             homePage();
@@ -956,188 +959,189 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     public void handleKeyPress() {
-        if (home == false && onePlayer == false && !pause) {
-            if (isKeyPressed(KeyEvent.VK_SPACE)) {
-                onOff = true;
-                bullSound();
-                //fire
-                System.out.println("here22");
-                if (bulletX == x && bulletY == y) {
-                    bullets.add(new Bullet(direction, x, y));
-                } else if ((Math.abs(bulletX - x) >= 10) || (Math.abs(bulletY - y) >= 5)) {
-                    bullets.add(new Bullet(direction, x, y));
+        if (easy || medium || hard) {
+            if (home == false && onePlayer == false && !pause) {
+                if (isKeyPressed(KeyEvent.VK_SPACE)) {
+                    onOff = true;
+                    bullSound();
+                    //fire
+//                System.out.println("here22");
+                    if (bulletX == x && bulletY == y) {
+                        bullets.add(new Bullet(direction, x, y));
+                    } else if ((Math.abs(bulletX - x) >= 10) || (Math.abs(bulletY - y) >= 5)) {
+                        bullets.add(new Bullet(direction, x, y));
 
-                }
-            } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
-                if (x > 0 && y > 0) {
-                    x--;
-                    y--;
-                    if (getDistance() < 6 || isBricksForTank1()) {
-                        x++;
-                        y++;
                     }
-                }
-                direction = Directions.down_left;
-            } else if (isKeyPressed(KeyEvent.VK_RIGHT) && isKeyPressed(KeyEvent.VK_DOWN)) {
-                // Handle down_right
-                if (x < maxWidth - 6 && y > 0) {
-                    x++;
-                    y--;
-                    if (getDistance() < 6 || isBricksForTank1()) {
+                } else if (isKeyPressed(KeyEvent.VK_LEFT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+                    if (x > 0 && y > 0) {
                         x--;
-                        y++;
-                    }
-                }
-                direction = Directions.down_right;
-            } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_LEFT)) {
-                // Handle up_left
-                if (y < maxHeight - 6 && x > 0) {
-                    y++;
-                    x--;
-                    if (getDistance() < 6 || isBricksForTank1()) {
                         y--;
-                        x++;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            x++;
+                            y++;
+                        }
                     }
-                }
-                direction = Directions.up_left;
-            } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_RIGHT)) {
-                // Handle up_right
-                if (y < maxHeight - 6 && x < maxWidth - 6) {
-                    y++;
-                    x++;
-                    if (getDistance() < 6 || isBricksForTank1()) {
+                    direction = Directions.down_left;
+                } else if (isKeyPressed(KeyEvent.VK_RIGHT) && isKeyPressed(KeyEvent.VK_DOWN)) {
+                    // Handle down_right
+                    if (x < maxWidth - 6 && y > 0) {
+                        x++;
                         y--;
-                        x--;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            x--;
+                            y++;
+                        }
                     }
-                }
-                direction = Directions.up_right;
-            } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
-                // Handle left
-                if (x > 0) {
-                    x--;
-                    if (getDistance() < 6 || isBricksForTank1()) {
+                    direction = Directions.down_right;
+                } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_LEFT)) {
+                    // Handle up_left
+                    if (y < maxHeight - 6 && x > 0) {
+                        y++;
+                        x--;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            y--;
+                            x++;
+                        }
+                    }
+                    direction = Directions.up_left;
+                } else if (isKeyPressed(KeyEvent.VK_UP) && isKeyPressed(KeyEvent.VK_RIGHT)) {
+                    // Handle up_right
+                    if (y < maxHeight - 6 && x < maxWidth - 6) {
+                        y++;
                         x++;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            y--;
+                            x--;
+                        }
                     }
-                }
-                direction = Directions.left;
-            } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-                // Handle right
-                if (x < maxWidth - 6) {
-                    x++;
-                    if (getDistance() < 6 || isBricksForTank1()) {
+                    direction = Directions.up_right;
+                } else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+                    // Handle left
+                    if (x > 0) {
                         x--;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            x++;
+                        }
                     }
-                }
-                direction = Directions.right;
-            } else if (isKeyPressed(KeyEvent.VK_UP)) {
-                // Handle up
+                    direction = Directions.left;
+                } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
+                    // Handle right
+                    if (x < maxWidth - 6) {
+                        x++;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            x--;
+                        }
+                    }
+                    direction = Directions.right;
+                } else if (isKeyPressed(KeyEvent.VK_UP)) {
+                    // Handle up
 //                System.out.println(getEnemyDistance());
-                if (y < maxHeight - 6) {
-                    y++;
-                    if (getDistance() < 6 || isBricksForTank1()) {
-                        y--;
-                    }
-                }
-                direction = Directions.up;
-            } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
-                // Handle down
-                if (y > 0) {
-                    y--;
-                    if (getDistance() < 6 || isBricksForTank1()) {
+                    if (y < maxHeight - 6) {
                         y++;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            y--;
+                        }
                     }
-                }
-                direction = Directions.down;
-            }
-
-            //  twoPlayer
-            if (isKeyPressed(KeyEvent.VK_Q)) {
-                onOff = true;
-                bullSound();
-                // fire
-                if (bulletX2 == x2 && bulletY2 == y2) {
-                    bullets2.add(new Bullet(direction2, x2, y2));
-
-                } else if ((Math.abs(bulletX2 - x2) >= 10) || (Math.abs(bulletY2 - y2) >= 5)) {
-                    bullets2.add(new Bullet(direction2, x2, y2));
-
+                    direction = Directions.up;
+                } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
+                    // Handle down
+                    if (y > 0) {
+                        y--;
+                        if (getDistance() < 6 || isBricksForTank1()) {
+                            y++;
+                        }
+                    }
+                    direction = Directions.down;
                 }
 
-            } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
-                if (x2 > -maxWidth + 6 && y2 < 0) {
-                    x2--;
-                    y2++;
-                    if (getDistance() < 6 || isBricksForTank2()) {
-                        x2++;
-                        y2--;
+                //  twoPlayer
+                if (isKeyPressed(KeyEvent.VK_Q)) {
+                    onOff = true;
+                    bullSound();
+                    // fire
+                    if (bulletX2 == x2 && bulletY2 == y2) {
+                        bullets2.add(new Bullet(direction2, x2, y2));
+
+                    } else if ((Math.abs(bulletX2 - x2) >= 10) || (Math.abs(bulletY2 - y2) >= 5)) {
+                        bullets2.add(new Bullet(direction2, x2, y2));
+
                     }
-                }
-                direction2 = Directions.W_A;
-            } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_W)) {
-                if (x2 < 0 && y2 < 0) {
-                    x2++;
-                    y2++;
-                    if (getDistance() < 6 || isBricksForTank2()) {
-                        x2--;
-                        y2--;
-                    }
-                }
-                direction2 = Directions.W_D;
-            } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_S)) {
-                if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
-                    x2--;
-                    y2--;
-                    if (getDistance() < 6 || isBricksForTank2()) {
-                        x2++;
-                        y2++;
-                    }
-                }
-                direction2 = Directions.S_A;
-            } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_S)) {
-                if (x2 < 0 && y2 > -maxHeight + 6) {
-                    x2++;
-                    y2--;
-                    if (getDistance() < 6 || isBricksForTank2()) {
+
+                } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
+                    if (x2 > -maxWidth + 6 && y2 < 0) {
                         x2--;
                         y2++;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2++;
+                            y2--;
+                        }
                     }
-                }
-                direction2 = Directions.S_D;
-            } else if (isKeyPressed(KeyEvent.VK_A)) {
-                if (x2 > -maxWidth + 6) {
-                    x2--;
-                    if (getDistance() < 6 || isBricksForTank2()) {
+                    direction2 = Directions.W_A;
+                } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_W)) {
+                    if (x2 < 0 && y2 < 0) {
                         x2++;
-                    }
-                }
-                direction2 = Directions.A;
-            } else if (isKeyPressed(KeyEvent.VK_D)) {
-                if (x2 < 0) {
-                    x2++;
-                    if (getDistance() < 6 || isBricksForTank2()) {
-                        x2--;
-                    }
-                }
-                direction2 = Directions.D;
-            } else if (isKeyPressed(KeyEvent.VK_W)) {
-                if (y2 < 0) {
-                    y2++;
-                    if (getDistance() < 6 || isBricksForTank2()) {
-                        y2--;
-                    }
-                }
-                direction2 = Directions.W;
-            } else if (isKeyPressed(KeyEvent.VK_S)) {
-                if (y2 > -maxHeight + 6) {
-                    y2--;
-                    if (getDistance() < 6 || isBricksForTank2()) {
                         y2++;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2--;
+                            y2--;
+                        }
                     }
+                    direction2 = Directions.W_D;
+                } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_S)) {
+                    if (x2 > -maxWidth + 6 && y2 > -maxHeight + 6) {
+                        x2--;
+                        y2--;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2++;
+                            y2++;
+                        }
+                    }
+                    direction2 = Directions.S_A;
+                } else if (isKeyPressed(KeyEvent.VK_D) && isKeyPressed(KeyEvent.VK_S)) {
+                    if (x2 < 0 && y2 > -maxHeight + 6) {
+                        x2++;
+                        y2--;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2--;
+                            y2++;
+                        }
+                    }
+                    direction2 = Directions.S_D;
+                } else if (isKeyPressed(KeyEvent.VK_A)) {
+                    if (x2 > -maxWidth + 6) {
+                        x2--;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2++;
+                        }
+                    }
+                    direction2 = Directions.A;
+                } else if (isKeyPressed(KeyEvent.VK_D)) {
+                    if (x2 < 0) {
+                        x2++;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            x2--;
+                        }
+                    }
+                    direction2 = Directions.D;
+                } else if (isKeyPressed(KeyEvent.VK_W)) {
+                    if (y2 < 0) {
+                        y2++;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            y2--;
+                        }
+                    }
+                    direction2 = Directions.W;
+                } else if (isKeyPressed(KeyEvent.VK_S)) {
+                    if (y2 > -maxHeight + 6) {
+                        y2--;
+                        if (getDistance() < 6 || isBricksForTank2()) {
+                            y2++;
+                        }
+                    }
+                    direction2 = Directions.S;
                 }
-                direction2 = Directions.S;
             }
         }
-
     }
 
     private void onOrOffSound() {
@@ -1283,7 +1287,7 @@ public class TanksGLEventListener extends TanksListener {
         }
 
         if (winner) {
-            System.out.println("x: " + xPosition + ", y: " + yPosition);
+//            System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 10 && xPosition <= 32 && yPosition >= 16 && yPosition <= 25) {
                 winner = false;
                 if (easy) {
@@ -1298,12 +1302,12 @@ public class TanksGLEventListener extends TanksListener {
 
             } else if (new Point2D(xPosition, yPosition).getDistanceFrom(new Point2D(46, 21)) <= 4) {
                 homePage();
-                System.out.println("Home Page");
+//                System.out.println("Home Page");
             }
 
             initGame();
         } else if (gameOver) {
-            System.out.println("x: " + xPosition + ", y: " + yPosition);
+//            System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 23 && xPosition <= 28 && yPosition >= 16 && yPosition <= 18) {
                 lives = 3;
                 gameOver = false;
