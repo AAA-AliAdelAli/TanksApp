@@ -49,6 +49,8 @@ public class TanksGLEventListener extends TanksListener {
     double EnemyYHardIIII = 19;
     Directions EnemyDirHardIIII = Directions.up;
     double EnemyYHardIIII2 = 1;
+    boolean trwwy=false;
+
     FileInputStream music, music1;
     AudioStream audios, audios1;
     boolean sound = false, sound1 = false;
@@ -103,8 +105,6 @@ public class TanksGLEventListener extends TanksListener {
             Point2D brickPos = getPosition(currentMap.bricks.get(i).position, false);
             Point2D bulletPos = getPosition(new Point2D(bullet.x, bullet.y), true);
 
-//            System.out.println("brick " + brickPos.x + ", " + brickPos.y);
-//            System.out.println("bullet " + bulletPos.x + ", " + bulletPos.y);
             if (bulletPos.x >= brickPos.x - .15
                     && bulletPos.x <= brickPos.x + .15
                     && bulletPos.y >= brickPos.y - .15
@@ -297,7 +297,7 @@ public class TanksGLEventListener extends TanksListener {
             audios = new AudioStream(music);
 
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+
         }
         AudioPlayer.player.start(audios);
 
@@ -315,7 +315,7 @@ public class TanksGLEventListener extends TanksListener {
                         texture[i].getPixels() // Imagedata
                 );
             } catch (IOException e) {
-                System.out.println(e);
+
                 e.printStackTrace();
             }
         }
@@ -327,6 +327,7 @@ public class TanksGLEventListener extends TanksListener {
         GLUT g = new GLUT();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
+
         try {
             music1 = new FileInputStream(new File("bsound.wav"));
             audios1 = new AudioStream(music1);
@@ -354,13 +355,13 @@ public class TanksGLEventListener extends TanksListener {
             DrawBackground(gl, 9);
             check_player2 = true;
         } else if (easy || medium || hard) {
+
             how =false;
 
             int level = 13;
             DrawBackground(gl, level);
             if (easy) {
 
-//                System.out.println("x2: " + x2);
                 currentMap = map1;
                 DrawTank(gl, EnemyX, EnemyY, 1, 1, EnemyDir);
                 if (!pause) {
@@ -392,7 +393,6 @@ public class TanksGLEventListener extends TanksListener {
 
             } else if (medium) {
                 currentMap = map2;
-                System.out.println("x:"+x);
                 DrawTank(gl, 42, EnemyY, 1, 1, EnemyDirMed);
                 DrawTank(gl, EnemyXMid, 30, 1, 1, EnemyDirMed2);
                 if (!pause) {
@@ -591,7 +591,7 @@ public class TanksGLEventListener extends TanksListener {
 //bullet
             for (Bullet bullet : bullets) {
                 if (bullet.fired && !pause) {
-//                System.out.println(bullet.fired);
+//
                     switch (bullet.directions) {
                         case up:
                             bullet.y++;
@@ -637,7 +637,7 @@ public class TanksGLEventListener extends TanksListener {
             if (check_player2) {
                 for (Bullet bullet : bullets2) {
                     if (bullet.fired && !pause) {
-//                System.out.println(bullet.fired);
+//
                         switch (bullet.directions) {
                             case W:
                                 bullet.y++;
@@ -679,7 +679,7 @@ public class TanksGLEventListener extends TanksListener {
             }
         }
 
-//        System.out.println(check_player2);
+//
 
         if ((winner || gameOver) && check_player2) {
             if (score > score2)
@@ -746,11 +746,12 @@ public class TanksGLEventListener extends TanksListener {
 
         if (!gameStarted) {
 
+
             counter = 0;
             gameStarted = true;
 
 
-            timer = new Timer(900, e -> {
+            timer = new Timer(1000, e -> {
 
                 if (!pause) {
                     counter++;
@@ -761,6 +762,7 @@ public class TanksGLEventListener extends TanksListener {
             timer.start();
         }
     }
+
 
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -796,7 +798,6 @@ public class TanksGLEventListener extends TanksListener {
         gl.glTranslated(x / (maxWidth / 2.0) - 0.9, y / (maxHeight / 2.0) - 0.9, 0);
         gl.glScaled(0.1 * scale, 0.1 * scale, 1);
         gl.glRotated(angle, 0, 0, 1);
-        //System.out.println(x +" " + y);
         gl.glBegin(GL.GL_QUADS);
         // Front Face
         gl.glTexCoord2f(0.0f, 0.0f);
@@ -839,7 +840,6 @@ public class TanksGLEventListener extends TanksListener {
         gl.glTranslated(x / (maxWidth / 2.0) + 0.9, y / (maxHeight / 2.0) + 0.9, 0);
         gl.glScaled(0.1 * scale, 0.1 * scale, 1);
         gl.glRotated(angle, 0, 0, 1);
-        //System.out.println(x +" " + y);
         gl.glBegin(GL.GL_QUADS);
         // Front Face
         gl.glTexCoord2f(0.0f, 0.0f);
@@ -959,7 +959,8 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     public void handleKeyPress() {
-        if (easy || medium || hard) {
+        if (easy || medium ||hard) {
+
             if (home == false && onePlayer == false && !pause) {
                 if (isKeyPressed(KeyEvent.VK_SPACE)) {
                     onOff = true;
@@ -1147,7 +1148,7 @@ public class TanksGLEventListener extends TanksListener {
     private void onOrOffSound() {
         try {
 
-            System.out.println(sound);
+//            System.out.println(sound);
             if (sound) {
                 AudioPlayer.player.stop(audios);
 
@@ -1157,7 +1158,7 @@ public class TanksGLEventListener extends TanksListener {
             }
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+//            System.err.println(e.getMessage());
         }
     }
 
@@ -1220,7 +1221,7 @@ public class TanksGLEventListener extends TanksListener {
 
         }
         if (onePlayer) {
-//            System.out.println("palyer1");
+//
             if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
                 sound = !sound;
                 onOrOffSound();
@@ -1239,6 +1240,7 @@ public class TanksGLEventListener extends TanksListener {
                 newGame();
 
 
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
                 initGame();
                 medium = true;
@@ -1254,7 +1256,6 @@ public class TanksGLEventListener extends TanksListener {
             }
         }
         if (twoPlayer) {
-//            System.out.println("player2");
 
             if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
                 sound = !sound;
@@ -1287,7 +1288,6 @@ public class TanksGLEventListener extends TanksListener {
         }
 
         if (winner) {
-//            System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 10 && xPosition <= 32 && yPosition >= 16 && yPosition <= 25) {
                 winner = false;
                 if (easy) {
@@ -1302,12 +1302,10 @@ public class TanksGLEventListener extends TanksListener {
 
             } else if (new Point2D(xPosition, yPosition).getDistanceFrom(new Point2D(46, 21)) <= 4) {
                 homePage();
-//                System.out.println("Home Page");
             }
 
             initGame();
         } else if (gameOver) {
-//            System.out.println("x: " + xPosition + ", y: " + yPosition);
             if (xPosition >= 23 && xPosition <= 28 && yPosition >= 16 && yPosition <= 18) {
                 lives = 3;
                 gameOver = false;
@@ -1345,7 +1343,12 @@ public class TanksGLEventListener extends TanksListener {
         keyBits.set(keyCode);
 
         if (isKeyPressed(KeyEvent.VK_ESCAPE))
-            pause = !pause;
+            if (pause) {
+                initGame();
+                homePage();
+            } else
+                pause = true;
+
         else
             pause = false;
     }
