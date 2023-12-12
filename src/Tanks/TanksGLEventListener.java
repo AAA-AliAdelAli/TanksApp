@@ -39,6 +39,7 @@ public class TanksGLEventListener extends TanksListener {
     int score;
     int score2;
     int counter;
+    boolean pause;
     GLUT g = new GLUT();
 
     double EnemyXMid = 18;
@@ -195,6 +196,7 @@ public class TanksGLEventListener extends TanksListener {
         lives2 = 3;
         score = score2 = 0;
         counter = 0;
+        pause = false;
 //        newGame();
 
         map1.bricks.clear();
@@ -356,29 +358,31 @@ public class TanksGLEventListener extends TanksListener {
                 System.out.println("x2: " + x2);
                 currentMap = map1;
                 DrawTank(gl, EnemyX, EnemyY, 1, 1, EnemyDir);
-                EnemyX += EnemyX2;
-                if (EnemyX > 54) {
-                    EnemyDir = Directions.left;
-                    EnemyX2 = -1;
-                }
-                if (EnemyX < 0) {
-                    EnemyDir = Directions.right;
-                    EnemyX2 = 1;
-                }
-                if (getEnemyDistance() < 6) {
-                    x = 0;
-                    y = 0;
-                    if (--lives == 0) {
-                        gameOver = true;
+                if (!pause) {
+                    EnemyX += EnemyX2;
+                    if (EnemyX > 54) {
+                        EnemyDir = Directions.left;
+                        EnemyX2 = -1;
+                    }
+                    if (EnemyX < 0) {
+                        EnemyDir = Directions.right;
+                        EnemyX2 = 1;
                     }
                 }
-                if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
-                    x2 = 0;
-                    y2 = 0;
-                    if (--lives2 == 0) {
-                        gameOver = true;
+                    if (getEnemyDistance() < 6) {
+                        x = 0;
+                        y = 0;
+                        if (--lives == 0) {
+                            gameOver = true;
+                        }
                     }
-                }
+                    if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
+                        x2 = 0;
+                        y2 = 0;
+                        if (--lives2 == 0) {
+                            gameOver = true;
+                        }
+                    }
 //                displayVar(g, gld);
 
             } else if (medium) {
@@ -386,23 +390,25 @@ public class TanksGLEventListener extends TanksListener {
                 System.out.println("x:"+x);
                 DrawTank(gl, 42, EnemyY, 1, 1, EnemyDirMed);
                 DrawTank(gl, EnemyXMid, 30, 1, 1, EnemyDirMed2);
-                EnemyXMid += EnemyXMid2;
-                EnemyY += EnemyY2;
-                if (EnemyXMid > 41) {
-                    EnemyDirMed2 = Directions.left;
-                    EnemyXMid2 = -0.6;
-                }
-                if (EnemyXMid < 12) {
-                    EnemyDirMed2 = Directions.right;
-                    EnemyXMid2 = 0.6;
-                }
-                if (EnemyY > 54) {
-                    EnemyDirMed = Directions.down;
-                    EnemyY2 = -1;
-                }
-                if (EnemyY < 0) {
-                    EnemyDirMed = Directions.up;
-                    EnemyY2 = 1;
+                if (!pause) {
+                    EnemyXMid += EnemyXMid2;
+                    EnemyY += EnemyY2;
+                    if (EnemyXMid > 41) {
+                        EnemyDirMed2 = Directions.left;
+                        EnemyXMid2 = -0.6;
+                    }
+                    if (EnemyXMid < 12) {
+                        EnemyDirMed2 = Directions.right;
+                        EnemyXMid2 = 0.6;
+                    }
+                    if (EnemyY > 54) {
+                        EnemyDirMed = Directions.down;
+                        EnemyY2 = -1;
+                    }
+                    if (EnemyY < 0) {
+                        EnemyDirMed = Directions.up;
+                        EnemyY2 = 1;
+                    }
                 }
                 if (Math.sqrt((x - EnemyXMid) * (x - EnemyXMid) + (y - 30) * (y - 30)) < 6) {
                     x = 0;
@@ -444,14 +450,16 @@ public class TanksGLEventListener extends TanksListener {
                 DrawTank(gl, 48, EnemyYHardII, 1, 1, EnemyDirHardII);
                 DrawTank(gl, EnemyXHard, EnemyYHardIII, 1, 1, EnemyDirHardIII);
                 DrawTank(gl, 0, EnemyYHardIIII, 1, 1, EnemyDirHardIIII);
-                EnemyYHardIIII += EnemyYHardIIII2;
-                if (EnemyYHardIIII > 53) {
-                    EnemyDirHardIIII = Directions.down;
-                    EnemyYHardIIII2 = -1;
-                }
-                if (EnemyYHardIIII < 19) {
-                    EnemyDirHardIIII = Directions.up;
-                    EnemyYHardIIII2 = 1;
+                if (!pause) {
+                    EnemyYHardIIII += EnemyYHardIIII2;
+                    if (EnemyYHardIIII > 53) {
+                        EnemyDirHardIIII = Directions.down;
+                        EnemyYHardIIII2 = -1;
+                    }
+                    if (EnemyYHardIIII < 19) {
+                        EnemyDirHardIIII = Directions.up;
+                        EnemyYHardIIII2 = 1;
+                    }
                 }
                 if (Math.sqrt((x - 0) * (x - 0) + (y - EnemyYHardIIII) * (y - EnemyYHardIIII)) < 6) {
                     x = 0;
@@ -469,34 +477,36 @@ public class TanksGLEventListener extends TanksListener {
                     }
                 }
 
-                EnemyXHard += EnemyXHard2;
-                EnemyYHardIII += EnemyYHardIII2;
+                if (!pause) {
+                    EnemyXHard += EnemyXHard2;
+                    EnemyYHardIII += EnemyYHardIII2;
 
-                EnemyYHard += EnemyYHard2;
-                EnemyYHardII += EnemyYHardII2;
+                    EnemyYHard += EnemyYHard2;
+                    EnemyYHardII += EnemyYHardII2;
 
-                if (EnemyXHard > 42) {
-                    EnemyDirHardIII = Directions.down;
-                    EnemyXHard2 = 0;
-                    EnemyYHardIII2 = -1;
-                    turned = true;
-                }
-                if (EnemyYHardIII < 49) {
-                    EnemyDirHardIII = Directions.left;
-                    EnemyYHardIII2 = 0;
-                    EnemyXHard2 = -1;
-                }
+                    if (EnemyXHard > 42) {
+                        EnemyDirHardIII = Directions.down;
+                        EnemyXHard2 = 0;
+                        EnemyYHardIII2 = -1;
+                        turned = true;
+                    }
+                    if (EnemyYHardIII < 49) {
+                        EnemyDirHardIII = Directions.left;
+                        EnemyYHardIII2 = 0;
+                        EnemyXHard2 = -1;
+                    }
 
-                if (EnemyXHard < 19) {
-                    EnemyDirHardIII = Directions.up;
-                    EnemyYHardIII2 = 1;
-                    EnemyXHard2 = 0;
-                }
-                if (EnemyYHardIII > 53 && EnemyXHard < 19) {
-                    EnemyDirHardIII = Directions.right;
-                    EnemyYHardIII2 = 0;
-                    EnemyXHard2 = 1;
-//                    turned=false;
+                    if (EnemyXHard < 19) {
+                        EnemyDirHardIII = Directions.up;
+                        EnemyYHardIII2 = 1;
+                        EnemyXHard2 = 0;
+                    }
+                    if (EnemyYHardIII > 53 && EnemyXHard < 19) {
+                        EnemyDirHardIII = Directions.right;
+                        EnemyYHardIII2 = 0;
+                        EnemyXHard2 = 1;
+    //                    turned=false;
+                    }
                 }
                 if (Math.sqrt((x - EnemyXHard) * (x - EnemyXHard) + (y - EnemyYHardIII) * (y - EnemyYHardIII)) < 6) {
                     x = 0;
@@ -513,22 +523,24 @@ public class TanksGLEventListener extends TanksListener {
                     }
                 }
 
-                if (EnemyYHardII > 54) {
+                if (!pause) {
+                    if (EnemyYHardII > 54) {
                     EnemyDirHardII = Directions.down;
                     EnemyYHardII2 = -1;
-                }
-                if (EnemyYHardII < 0) {
-                    EnemyDirHardII = Directions.up;
-                    EnemyYHardII2 = 1;
-                }
+                    }
+                    if (EnemyYHardII < 0) {
+                        EnemyDirHardII = Directions.up;
+                        EnemyYHardII2 = 1;
+                    }
 
-                if (EnemyYHard > 18) {
-                    EnemyDirHard = Directions.down;
-                    EnemyYHard2 = -1;
-                }
-                if (EnemyYHard < 0) {
-                    EnemyDirHard = Directions.up;
-                    EnemyYHard2 = 1;
+                    if (EnemyYHard > 18) {
+                        EnemyDirHard = Directions.down;
+                        EnemyYHard2 = -1;
+                    }
+                    if (EnemyYHard < 0) {
+                        EnemyDirHard = Directions.up;
+                        EnemyYHard2 = 1;
+                    }
                 }
                 if (Math.sqrt((x - 18) * (x - 18) + (y - EnemyYHard) * (y - EnemyYHard)) < 6) {
                     x = 0;
@@ -573,7 +585,7 @@ public class TanksGLEventListener extends TanksListener {
             }
 //bullet
             for (Bullet bullet : bullets) {
-                if (bullet.fired) {
+                if (bullet.fired && !pause) {
 //                System.out.println(bullet.fired);
                     switch (bullet.directions) {
                         case up:
@@ -619,7 +631,7 @@ public class TanksGLEventListener extends TanksListener {
             //make shot if two player only
             if (check_player2) {
                 for (Bullet bullet : bullets2) {
-                    if (bullet.fired) {
+                    if (bullet.fired && !pause) {
 //                System.out.println(bullet.fired);
                         switch (bullet.directions) {
                             case W:
@@ -723,7 +735,8 @@ public class TanksGLEventListener extends TanksListener {
 
         javax.swing.Timer timer = new Timer(900, e -> {
             //start counter in text field
-            counter++;
+            if (!pause)
+                counter++;  
 
 
         });
@@ -926,7 +939,7 @@ public class TanksGLEventListener extends TanksListener {
     }
 
     public void handleKeyPress() {
-        if (home == false && onePlayer == false) {
+        if (home == false && onePlayer == false && !pause) {
             if (isKeyPressed(KeyEvent.VK_SPACE)) {
                 onOff = true;
                 bullSound();
@@ -1310,6 +1323,11 @@ public class TanksGLEventListener extends TanksListener {
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
+        
+        if (isKeyPressed(KeyEvent.VK_ESCAPE))
+            pause = !pause;
+        else
+            pause = false;
     }
 
     @Override
