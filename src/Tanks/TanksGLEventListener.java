@@ -53,6 +53,8 @@ public class TanksGLEventListener extends TanksListener {
     AudioStream audios, audios1;
     boolean sound = false, sound1 = false;
     boolean onOff = false;
+    private javax.swing.Timer timer;
+    boolean gameStarted = false;
 
 
     boolean check_player2 = false;
@@ -369,20 +371,20 @@ public class TanksGLEventListener extends TanksListener {
                         EnemyX2 = 1;
                     }
                 }
-                    if (getEnemyDistance() < 6) {
-                        x = 0;
-                        y = 0;
-                        if (--lives == 0) {
-                            gameOver = true;
-                        }
+                if (getEnemyDistance() < 6) {
+                    x = 0;
+                    y = 0;
+                    if (--lives == 0) {
+                        gameOver = true;
                     }
-                    if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
-                        x2 = 0;
-                        y2 = 0;
-                        if (--lives2 == 0) {
-                            gameOver = true;
-                        }
+                }
+                if (Math.sqrt(((x2 + 54) - 42) * ((x2 + 54) - 42) + ((y2 + 54) - EnemyY) * ((y2 + 54) - EnemyY)) < 6) {
+                    x2 = 0;
+                    y2 = 0;
+                    if (--lives2 == 0) {
+                        gameOver = true;
                     }
+                }
 //                displayVar(g, gld);
 
             } else if (medium) {
@@ -505,7 +507,7 @@ public class TanksGLEventListener extends TanksListener {
                         EnemyDirHardIII = Directions.right;
                         EnemyYHardIII2 = 0;
                         EnemyXHard2 = 1;
-    //                    turned=false;
+                        //                    turned=false;
                     }
                 }
                 if (Math.sqrt((x - EnemyXHard) * (x - EnemyXHard) + (y - EnemyYHardIII) * (y - EnemyYHardIII)) < 6) {
@@ -525,8 +527,8 @@ public class TanksGLEventListener extends TanksListener {
 
                 if (!pause) {
                     if (EnemyYHardII > 54) {
-                    EnemyDirHardII = Directions.down;
-                    EnemyYHardII2 = -1;
+                        EnemyDirHardII = Directions.down;
+                        EnemyYHardII2 = -1;
                     }
                     if (EnemyYHardII < 0) {
                         EnemyDirHardII = Directions.up;
@@ -673,9 +675,9 @@ public class TanksGLEventListener extends TanksListener {
                 }
             }
         }
-        
+
 //        System.out.println(check_player2);
-        
+
         if ((winner || gameOver) && check_player2) {
             if (score > score2)
                 JOptionPane.showMessageDialog(null, namePlayer1 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
@@ -683,7 +685,7 @@ public class TanksGLEventListener extends TanksListener {
                 JOptionPane.showMessageDialog(null, namePlayer2 + " wins", "The winner", JOptionPane.INFORMATION_MESSAGE);
             else
                 JOptionPane.showMessageDialog(null, "Draw", "Draw", JOptionPane.INFORMATION_MESSAGE);
-            
+
             initGame();
             homePage();
         } else if (winner) {
@@ -733,15 +735,24 @@ public class TanksGLEventListener extends TanksListener {
 
     public void newGame() {
 
-        javax.swing.Timer timer = new Timer(900, e -> {
-            //start counter in text field
-            if (!pause)
-                counter++;  
+        if (!gameStarted) {
+
+            counter = 0;
+            gameStarted = true;
 
 
-        });
-        timer.start();
+            timer = new Timer(900, e -> {
+
+                if (!pause) {
+                    counter++;
+                }
+            });
+
+
+            timer.start();
+        }
     }
+
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
@@ -1043,7 +1054,7 @@ public class TanksGLEventListener extends TanksListener {
 
                 } else if ((Math.abs(bulletX2 - x2) >= 10) || (Math.abs(bulletY2 - y2) >= 5)) {
                     bullets2.add(new Bullet(direction2, x2, y2));
-;
+
                 }
 
             } else if (isKeyPressed(KeyEvent.VK_A) && isKeyPressed(KeyEvent.VK_W)) {
@@ -1128,7 +1139,6 @@ public class TanksGLEventListener extends TanksListener {
 
             System.out.println(sound);
             if (sound) {
-                System.out.println("here");
                 AudioPlayer.player.stop(audios);
 
             } else {
@@ -1158,15 +1168,11 @@ public class TanksGLEventListener extends TanksListener {
         xPosition = (int) ((x4 / width) * 60);
         yPosition = 60 - (int) ((y4 / height) * 60);
 
-        System.out.println("x:" + xPosition + "y:" + yPosition);
 
         if (home) {
             if (xPosition <= 58 && xPosition >= 52 && yPosition <= 8 && yPosition >= 2) {
                 sound = !sound;
                 onOrOffSound();
-//                home = true;
-
-                //return of how
             }
             if (xPosition <= 58 && xPosition >= 52 && yPosition <= 59 && yPosition >= 54) {
                 System.exit(0);
@@ -1192,7 +1198,7 @@ public class TanksGLEventListener extends TanksListener {
                 namePlayer1 = JOptionPane.showInputDialog(null, "name player1:");
                 namePlayer2 = JOptionPane.showInputDialog(null, "name player2:");
             }
-            
+
             namePlayer1 = (namePlayer1 == null) ? "Player1" : namePlayer1;
             namePlayer2 = (namePlayer2 == null) ? "Player2" : namePlayer2;
         }
@@ -1204,7 +1210,7 @@ public class TanksGLEventListener extends TanksListener {
 
         }
         if (onePlayer) {
-            System.out.println("palyer1");
+//            System.out.println("palyer1");
             if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
                 sound = !sound;
                 onOrOffSound();
@@ -1217,18 +1223,20 @@ public class TanksGLEventListener extends TanksListener {
                 homePage();
             }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
+                initGame();
                 easy = true;
                 onePlayer = false;
                 newGame();
 
 
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
-
+                initGame();
                 medium = true;
                 onePlayer = false;
                 newGame();
 
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
+                initGame();
                 hard = true;
                 onePlayer = false;
                 newGame();
@@ -1236,7 +1244,7 @@ public class TanksGLEventListener extends TanksListener {
             }
         }
         if (twoPlayer) {
-            System.out.println("player2");
+//            System.out.println("player2");
 
             if (xPosition <= 7 && xPosition >= 0 && yPosition <= 8 && yPosition >= 0) {
                 sound = !sound;
@@ -1250,15 +1258,17 @@ public class TanksGLEventListener extends TanksListener {
                 homePage();
             }
             if (xPosition <= 54 && xPosition >= 30 && yPosition <= 50 && yPosition >= 41) {
+                initGame();
                 easy = true;
                 twoPlayer = false;
                 newGame();
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
+                initGame();
                 medium = true;
                 twoPlayer = false;
                 newGame();
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
-
+                initGame();
                 hard = true;
                 twoPlayer = false;
                 newGame();
@@ -1323,7 +1333,7 @@ public class TanksGLEventListener extends TanksListener {
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
-        
+
         if (isKeyPressed(KeyEvent.VK_ESCAPE))
             pause = !pause;
         else
