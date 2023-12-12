@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../jar_files/georss-rome-0.9.7.jar!/com" />
+      <root url="jar://$PROJECT_DIR$/../jar_files/georss-rome-0.9.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

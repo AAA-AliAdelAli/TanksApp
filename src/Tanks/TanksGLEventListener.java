@@ -55,6 +55,8 @@ public class TanksGLEventListener extends TanksListener {
 
     boolean check_player2 = false;
     private Thread audioThread;
+    String namePlayer1="player1";
+    String namePlayer2="player2";
 
     private void drawBrick(GL gl, Brick b) {
         gl.glEnable(GL.GL_BLEND);
@@ -187,7 +189,7 @@ public class TanksGLEventListener extends TanksListener {
         bullets = new ArrayList<>();
         bullets2 = new ArrayList<>();
         lives = 3;
-        lives2 = 3;
+        lives2 = 5;
         score = score2 = 0;
         counter = 0;
         newGame();
@@ -341,6 +343,7 @@ public class TanksGLEventListener extends TanksListener {
             DrawBackground(gl, 9);
             check_player2 = true;
         } else if (easy || medium || hard) {
+
             int level = 12;
             DrawBackground(gl, level);
             if (easy) {
@@ -665,11 +668,11 @@ public class TanksGLEventListener extends TanksListener {
         gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
         gl2.glRasterPos2f(-.92f, .9f);
-        g.glutBitmapString(5, "Player1 Score ");
+        g.glutBitmapString(5, namePlayer1+" Score "  );
         g.glutBitmapString(5, Integer.toString(score));
 
         gl2.glRasterPos2f(-.92f, .74f);
-        g.glutBitmapString(5, "Player1 Lives  ");
+        g.glutBitmapString(5, namePlayer1+"Lives  ");
         g.glutBitmapString(5, Integer.toString(lives));
 
         gl2.glRasterPos2f(-.92f, .60f);
@@ -678,11 +681,11 @@ public class TanksGLEventListener extends TanksListener {
 
         if (check_player2) {
             gl2.glRasterPos2f(-.92f, .82f);
-            g.glutBitmapString(5, "Player2 Score ");
+            g.glutBitmapString(5, namePlayer2+" Score ");
             g.glutBitmapString(5, Integer.toString(score2));
 
             gl2.glRasterPos2f(-.92f, .66f);
-            g.glutBitmapString(5, "Player2 Lives  ");
+            g.glutBitmapString(5, namePlayer2+" Lives  ");
             g.glutBitmapString(5, Integer.toString(lives2));
         }
 
@@ -1178,6 +1181,7 @@ public class TanksGLEventListener extends TanksListener {
                 System.out.println("Entering onePlayer block");
                 home = false;
                 onePlayer = true;
+                namePlayer1 = JOptionPane.showInputDialog(null, "name:");
             }
 
             if ((xPosition >= 52 && xPosition <= 58) && (yPosition >= 54 && yPosition <= 59)) {
@@ -1187,6 +1191,8 @@ public class TanksGLEventListener extends TanksListener {
             if (xPosition <= 28 && xPosition >= 4 && yPosition <= 31 && yPosition >= 23) {
                 home = false;
                 twoPlayer = true;
+                namePlayer1 = JOptionPane.showInputDialog(null, "name player1:");
+                namePlayer2 = JOptionPane.showInputDialog(null, "name player2:");
             }
         }
         if (onePlayer) {
@@ -1201,10 +1207,12 @@ public class TanksGLEventListener extends TanksListener {
                 easy = true;
                 onePlayer = false;
 
+
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 33 && yPosition >= 24) {
 
                 medium = true;
                 onePlayer = false;
+
 
             } else if (xPosition <= 53 && xPosition >= 30 && yPosition <= 17 && yPosition >= 8) {
                 hard = true;
