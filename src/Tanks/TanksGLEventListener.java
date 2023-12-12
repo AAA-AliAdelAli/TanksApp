@@ -711,7 +711,7 @@ public class TanksGLEventListener extends TanksListener {
             g.glutBitmapString(5, Integer.toString(score));
 
             gl2.glRasterPos2f(-.92f, .74f);
-            g.glutBitmapString(5, namePlayer1 + " Lives");
+            g.glutBitmapString(5, namePlayer1 + " Lives ");
             g.glutBitmapString(5, Integer.toString(lives));
 
             gl2.glRasterPos2f(-.92f, .60f);
@@ -1199,8 +1199,8 @@ public class TanksGLEventListener extends TanksListener {
                 namePlayer2 = JOptionPane.showInputDialog(null, "name player2:");
             }
 
-            namePlayer1 = (namePlayer1 == null) ? "Player1" : namePlayer1;
-            namePlayer2 = (namePlayer2 == null) ? "Player2" : namePlayer2;
+            namePlayer1 = (namePlayer1 == null || namePlayer1.length() == 0) ? "Player1" : namePlayer1;
+            namePlayer2 = (namePlayer2 == null || namePlayer2.length() == 0) ? "Player2" : namePlayer2;
         }
         if (how){
             if (xPosition >= 0 && xPosition <= 7 && yPosition >= 54 && yPosition <= 60) {
